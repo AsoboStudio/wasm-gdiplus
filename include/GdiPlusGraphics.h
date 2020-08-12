@@ -5,7 +5,7 @@
 #ifndef __GDIPLUS_GRAPHICS_H
 #define __GDIPLUS_GRAPHICS_H
 
-#include <MSFS\Render\GdiPlus\gdiplus.h>
+#include "gdiplus.h"
 
 #ifndef __cplusplus
 #error "A C++ compiler is required to include gdiplusgraphics.h."

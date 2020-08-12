@@ -6,7 +6,7 @@
 
 #include <MSFS\MSFS_WindowsTypes.h>
 #include <MSFS\Render\nanovg.h>
-#include <MSFS\Render\GdiPlus\gdiplustypes.h>
+#include "gdiplustypes.h"
 
 namespace Gdiplus {
 

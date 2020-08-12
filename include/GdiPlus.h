@@ -7,7 +7,7 @@
 
 #include <MSFS\MSFS_WindowsTypes.h>
 #include <string.h>
-#include "MSFS\Render\nanovg.h"
+#include <MSFS\Render\nanovg.h>
 
 #ifndef _COM_interface
 #define _COM_interface struct

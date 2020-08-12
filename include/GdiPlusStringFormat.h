@@ -5,8 +5,8 @@
 #ifndef __GDIPLUS_STRINGFORMAT_H
 #define __GDIPLUS_STRINGFORMAT_H
 
-#include <MSFS\Render\GdiPlus\GdiPlusTypes.h>
-#include <MSFS\Render\GdiPlus\GdiPlusEnums.h>
+#include "GdiPlusTypes.h"
+#include "GdiPlusEnums.h"
 
 
 #ifndef __cplusplus

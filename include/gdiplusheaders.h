@@ -93,7 +93,7 @@ namespace Gdiplus {
 		Bitmap(INT width, INT height, Graphics* target);
 		Bitmap(INT width, INT height, PixelFormat format = PixelFormat32bppARGB);
 		Status SetPixel(INT x, INT y, const Color& color);
-		Status LockBits(const Rect* rect, UINT flags, PixelFormat format, BitmapData* lockedBitmapData);
+		Status LockBits(const Rect* rect, ::UINT flags, PixelFormat format, BitmapData* lockedBitmapData);
 		Status UnlockBits(BitmapData* lcokedBitmapData);
 
 		/**** NOT SUPPORTED YET***\

@@ -6,9 +6,9 @@
 #define __GDIPLUS_LINECAPS_H
 
 #include <MSFS\MSFS_WindowsTypes.h>
-#include <MSFS\Render\GdiPlus\GdiPlusTypes.h>
-#include <MSFS\Render\GdiPlus\GdiPlusEnums.h>
-#include <MSFS\Render\GdiPlus\GdiPlusPath.h>
+#include "GdiPlusTypes.h"
+#include "GdiPlusEnums.h"
+#include "GdiPlusPath.h"
 
 #ifndef __cplusplus
 #error "A C++ compiler is required to include gdipluslinecaps.h."

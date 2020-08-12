@@ -1,7 +1,7 @@
 // Copyright (C) Asobo Studio. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#include <MSFS\Render\GdiPlus\gdiplusheaders.h>
+#include "gdiplusheaders.h"
 namespace Gdiplus {
 
 	// Image

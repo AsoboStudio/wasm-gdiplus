@@ -70,8 +70,8 @@ namespace Gdiplus {
 	} PaletteType;
 
 	typedef struct ColorPalette {
-		UINT Flags;
-		UINT Count;
+		::UINT Flags;
+		::UINT Count;
 		ARGB Entries[1];
 	} ColorPalette;
 

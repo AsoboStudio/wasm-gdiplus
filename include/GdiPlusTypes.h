@@ -72,8 +72,8 @@ namespace Gdiplus {
 		Size(IN INT width, IN INT height);
 		Size operator+(IN const Size& sz) const;
 		Size operator-(IN const Size& sz) const;
-		BOOL Equals(IN const Size& sz) const;
-		BOOL Empty() const;
+		::BOOL Equals(IN const Size& sz) const;
+		::BOOL Empty() const;
 
 	public:
 
@@ -88,8 +88,8 @@ namespace Gdiplus {
 		SizeF(IN REAL width, IN REAL height);
 		SizeF operator+(IN const SizeF& sz) const;
 		SizeF operator-(IN const SizeF& sz) const;
-		BOOL Equals(IN const SizeF& sz) const;
-		BOOL Empty() const;
+		::BOOL Equals(IN const SizeF& sz) const;
+		::BOOL Empty() const;
 
 	public:
 
@@ -105,7 +105,7 @@ namespace Gdiplus {
 		Point(IN INT x, IN INT y);
 		Point operator+(IN const Point& point) const;
 		Point operator-(IN const Point& point) const;
-		BOOL Equals(IN const Point& point);
+		::BOOL Equals(IN const Point& point);
 
 	public:
 
@@ -121,7 +121,7 @@ namespace Gdiplus {
 		PointF(IN REAL x, IN REAL y);
 		PointF operator+(IN const PointF& point) const;
 		PointF operator-(IN const PointF& point) const;
-		BOOL Equals(IN const PointF& point);
+		::BOOL Equals(IN const PointF& point);
 
 	public:
 
@@ -144,17 +144,17 @@ namespace Gdiplus {
 		INT GetTop() const;
 		INT GetRight() const;
 		INT GetBottom() const;
-		BOOL IsEmptyArea() const;
-		BOOL Equals(IN const Rect& rect) const;
-		BOOL Contains(IN INT x, IN INT y) const;
-		BOOL Contains(IN const Point& pt) const;
-		BOOL Contains(IN Rect& rect) const;
+		::BOOL IsEmptyArea() const;
+		::BOOL Equals(IN const Rect& rect) const;
+		::BOOL Contains(IN INT x, IN INT y) const;
+		::BOOL Contains(IN const Point& pt) const;
+		::BOOL Contains(IN Rect& rect) const;
 		VOID Inflate(IN INT dx, IN INT dy);
 		VOID Inflate(IN const Point& point);
-		BOOL Intersect(IN const Rect& rect);
-		static BOOL Intersect(OUT Rect& c, IN const Rect& a, IN const Rect& b);
-		BOOL IntersectsWith(IN const Rect& rect) const;
-		static BOOL Union(OUT Rect& c, IN const Rect& a, IN const Rect& b);
+		::BOOL Intersect(IN const Rect& rect);
+		static ::BOOL Intersect(OUT Rect& c, IN const Rect& a, IN const Rect& b);
+		::BOOL IntersectsWith(IN const Rect& rect) const;
+		static ::BOOL Union(OUT Rect& c, IN const Rect& a, IN const Rect& b);
 		VOID Offset(IN const Point& point);
 		VOID Offset(IN INT dx, IN INT dy);
 
@@ -183,17 +183,17 @@ namespace Gdiplus {
 		REAL GetTop() const;
 		REAL GetRight() const;
 		REAL GetBottom() const;
-		BOOL IsEmptyArea() const;
-		BOOL Equals(IN const RectF& rect) const;
-		BOOL Contains(IN REAL x, IN REAL y) const;
-		BOOL Contains(IN const PointF& pt) const;
-		BOOL Contains(IN const RectF& rect) const;
+		::BOOL IsEmptyArea() const;
+		::BOOL Equals(IN const RectF& rect) const;
+		::BOOL Contains(IN REAL x, IN REAL y) const;
+		::BOOL Contains(IN const PointF& pt) const;
+		::BOOL Contains(IN const RectF& rect) const;
 		VOID Inflate(IN REAL dx, IN REAL dy);
 		VOID Inflate(IN const PointF& point);
-		BOOL Intersect(IN const RectF& rect);
-		static BOOL Intersect(OUT RectF& c, IN const RectF& a, IN const RectF& b);
-		BOOL IntersectsWith(IN const RectF& rect) const;
-		static BOOL Union(OUT RectF& c, IN const RectF& a, IN const RectF& b);
+		::BOOL Intersect(IN const RectF& rect);
+		static ::BOOL Intersect(OUT RectF& c, IN const RectF& a, IN const RectF& b);
+		::BOOL IntersectsWith(IN const RectF& rect) const;
+		static ::BOOL Union(OUT RectF& c, IN const RectF& a, IN const RectF& b);
 		VOID Offset(IN const PointF& point);
 		VOID Offset(IN REAL dx, IN REAL dy);
 

@@ -13,8 +13,8 @@
 #endif
 
 #include <MSFS\MSFS_WindowsTypes.h>
-#include <MSFS\Render\GdiPlus\gdiplusheaders.h>
-#include <MSFS\Render\GdiPlus\gdipluscolor.h>
+#include "gdiplusheaders.h"
+#include "gdipluscolor.h"
 namespace Gdiplus {
 
 	class Brush//: public GdiplusBase

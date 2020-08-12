@@ -1,13 +1,13 @@
 // Copyright (C) Asobo Studio. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#include <MSFS\Render\GdiPlus\gdiplus.h>
+#include "gdiplus.h"
 #include <stdlib.h>
 #include <wchar.h>
 #include <locale>
 #include <codecvt>
 
-#include <MSFS\Render\GdiPlus\GdiPlusHatchStylePatterns.inl>
+#include "GdiPlusHatchStylePatterns.inl"
 namespace Gdiplus {
 	// Graphics
 

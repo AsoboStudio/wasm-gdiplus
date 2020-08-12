@@ -6,8 +6,8 @@
 #define __GDIPLUS_PATH_H
 
 #include <MSFS\MSFS_WindowsTypes.h>
-#include <MSFS\Render\GdiPlus\gdiplusheaders.h>
-#include <MSFS\Render\GdiPlus\gdiplustypes.h>
+#include "gdiplusheaders.h"
+#include "gdiplustypes.h"
 
 #ifndef __cplusplus
 #error "A C++ compiler is required to include gdipluspath.h."

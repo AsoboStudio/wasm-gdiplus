@@ -5,10 +5,10 @@
 #ifndef __GDIPLUS_PEN_H
 #define __GDIPLUS_PEN_H
 #include <MSFS\MSFS_WindowsTypes.h>
-#include <MSFS\Render\GdiPlus\GdiPlusTypes.h>
-#include <MSFS\Render\GdiPlus\GdiPlusEnums.h>
-#include <MSFS\Render\GdiPlus\GdiPlusColor.h>
-#include <MSFS\Render\GdiPlus\GdiPlusLineCaps.h>
+#include "GdiPlusTypes.h"
+#include "GdiPlusEnums.h"
+#include "GdiPlusColor.h"
+#include "GdiPlusLineCaps.h"
 
 #ifndef __cplusplus
 #error "A C++ compiler is required to include gdipluspen.h."

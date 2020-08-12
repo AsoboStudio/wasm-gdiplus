@@ -67,8 +67,8 @@ namespace Gdiplus {
 	} RotateFlipType;
 
 	typedef struct BitmapData {
-		UINT Width;
-		UINT Height;
+		::UINT Width;
+		::UINT Height;
 		INT Stride;
 		INT PixelFormat;  /* MSDN: "PixelFormat PixelFormat;" */
 		VOID* Scan0;
@@ -107,13 +107,13 @@ namespace Gdiplus {
 	 * structure until this problem is resolved!  Can't test because
 	 * ImageItemData is not supported by the redistributable GDI+ 1.0 DLL. */
 	typedef struct ImageItemData {
-		UINT Size;
-		UINT Position;
+		::UINT Size;
+		::UINT Position;
 		VOID* Desc;
-		UINT DescSize;
-		UINT* Data;
-		UINT DataSize;
-		UINT Cookie;
+		::UINT DescSize;
+		::UINT* Data;
+		::UINT DataSize;
+		::UINT Cookie;
 	} ImageItemData;
 	/*
 	typedef struct PropertyItem {

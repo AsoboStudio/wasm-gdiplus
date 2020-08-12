@@ -5,8 +5,8 @@
 #define __GDIPLUS_EFFECTS_H
 
 #include <MSFS\MSFS_WindowsTypes.h>
-#include <MSFS\Render\GdiPlus\gdiplustypes.h>
-#include <MSFS\Render\GdiPlus\gdiplusheaders.h>
+#include "gdiplustypes.h"
+#include "gdiplusheaders.h"
 
 namespace Gdiplus {
 
@@ -30,7 +30,7 @@ namespace Gdiplus {
 
 	typedef struct BlurParams {
 		REAL radius;
-		BOOL expandEdge;
+		::BOOL expandEdge;
 	} BlurParams;
 
 	typedef struct BrightnessContrastParams {
@@ -70,7 +70,7 @@ namespace Gdiplus {
 	} LevelsParams;
 
 	typedef struct RedEyeCorrectionParams {
-		UINT numberOfAreas;
+		::UINT numberOfAreas;
 		RECT* areas;
 	} RedEyeCorrectionParams;
 
