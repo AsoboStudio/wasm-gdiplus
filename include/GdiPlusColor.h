@@ -1,14 +1,27 @@
 // Copyright (C) Asobo Studio. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
+// based on the w32api implementation of the GDI+ wrappers: 
+//
+//   Created by Markus Koenig <markus@stber-koenig.de>
+
 
 #ifndef __GDIPLUS_COLOR_H
 #define __GDIPLUS_COLOR_H
 
-#include <MSFS\MSFS_WindowsTypes.h>
-#include <MSFS\Render\nanovg.h>
-#include "gdiplustypes.h"
+namespace Gdiplus
+{
+	typedef enum HistogramFormat {
+		HistogramFormatARGB = 0,
+		HistogramFormatPARGB = 1,
+		HistogramFormatRGB = 2,
+		HistogramFormatGray = 3,
+		HistogramFormatB = 4,
+		HistogramFormatG = 5,
+		HistogramFormatR = 6,
+		HistogramFormatA = 7
+	} HistogramFormat;
 
-namespace Gdiplus {
+	typedef BYTE ColorChannelLUT[256];
 
 	typedef enum ColorChannelFlags {
 		ColorChannelFlagsC = 0,
@@ -18,10 +31,10 @@ namespace Gdiplus {
 		ColorChannelFlagsLast = 4
 	} ColorChannelFlags;
 
-	typedef struct Color :public NVGcolor
+	typedef struct Color
 	{
 #ifdef __cplusplus
-	private:
+	public:
 #endif
 		ARGB Value;
 
@@ -184,23 +197,76 @@ namespace Gdiplus {
 		static const ARGB Yellow = 0xFFFFFF00;
 		static const ARGB YellowGreen = 0xFF9ACD32;
 
-		Color();
-		Color(const NVGcolor& _color);
-		Color(ARGB _color);
-		Color(BYTE r, BYTE g, BYTE b);
-		Color(BYTE a, BYTE r, BYTE g, BYTE b);
-		BYTE GetA() const;
-		BYTE GetAlpha() const;
-		BYTE GetB() const;
-		BYTE GetBlue() const;
-		BYTE GetG() const;
-		BYTE GetGreen() const;
-		BYTE GetR() const;
-		BYTE GetRed() const;
-		Status SetValue(const ARGB _color);
-		ARGB GetValue() const;
-		COLORREF ToCOLORREF() const;
+		Color() : Value(0xFF000000) {}
+		Color(ARGB argb) : Value(argb) {}
+		Color(BYTE r, BYTE g, BYTE b) : Value(MakeARGB(0xFF, r, g, b)) {}
+		Color(BYTE a, BYTE r, BYTE g, BYTE b) : Value(MakeARGB(a, r, g, b)) {}
+
+		BYTE GetA() const
+		{
+			return (BYTE)(Value >> 24);
+		}
+		BYTE GetAlpha() const
+		{
+			return (BYTE)(Value >> 24);
+		}
+		BYTE GetB() const
+		{
+			return (BYTE)Value;
+		}
+		BYTE GetBlue() const
+		{
+			return (BYTE)Value;
+		}
+		BYTE GetG() const
+		{
+			return (BYTE)(Value >> 8);
+		}
+		BYTE GetGreen() const
+		{
+			return (BYTE)(Value >> 8);
+		}
+		BYTE GetR() const
+		{
+			return (BYTE)(Value >> 16);
+		}
+		BYTE GetRed() const
+		{
+			return (BYTE)(Value >> 16);
+		}
+		ARGB GetValue() const
+		{
+			return Value;
+		}
+		VOID SetFromCOLORREF(COLORREF rgb)
+		{
+			BYTE r = (BYTE)rgb;
+			BYTE g = (BYTE)(rgb >> 8);
+			BYTE b = (BYTE)(rgb >> 16);
+			Value = MakeARGB(0xFF, r, g, b);
+		}
+		VOID SetValue(ARGB argb)
+		{
+			Value = argb;
+		}
+		ARGB GetValue()
+		{
+			return Value;
+		}
+		COLORREF ToCOLORREF() const
+		{
+			return RGB(GetRed(), GetGreen(), GetBlue());
+		}
 #endif /* __cplusplus */
 	} Color;
+
+	typedef struct {
+		Color oldColor;
+		Color newColor;
+	} ColorMap;
+
+	typedef struct {
+		float m[5][5];
+	} ColorMatrix;
 }
 #endif /* __GDIPLUS_COLOR_H */

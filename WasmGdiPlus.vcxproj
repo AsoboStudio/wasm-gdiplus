@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|MSFS">
+      <Configuration>Debug</Configuration>
+      <Platform>MSFS</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|MSFS">
+      <Configuration>Release</Configuration>
+      <Platform>MSFS</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\MSFS\Render\nanovg.h" />
+    <ClInclude Include="include\FlatNVG\adjustablearrowcap-private.h" />
+    <ClInclude Include="include\FlatNVG\adjustablearrowcap.h" />
+    <ClInclude Include="include\FlatNVG\bitmap-private.h" />
+    <ClInclude Include="include\FlatNVG\bitmap.h" />
+    <ClInclude Include="include\FlatNVG\brush-private.h" />
+    <ClInclude Include="include\FlatNVG\brush.h" />
+    <ClInclude Include="include\FlatNVG\codecs-private.h" />
+    <ClInclude Include="include\FlatNVG\codecs.h" />
+    <ClInclude Include="include\FlatNVG\customlinecap-private.h" />
+    <ClInclude Include="include\FlatNVG\customlinecap.h" />
+    <ClInclude Include="include\FlatNVG\font-private.h" />
+    <ClInclude Include="include\FlatNVG\font.h" />
+    <ClInclude Include="include\FlatNVG\fontcollection-private.h" />
+    <ClInclude Include="include\FlatNVG\fontcollection.h" />
+    <ClInclude Include="include\FlatNVG\fontfamily-private.h" />
+    <ClInclude Include="include\FlatNVG\fontfamily.h" />
+    <ClInclude Include="include\FlatNVG\gdiplus-private.h" />
+    <ClInclude Include="include\FlatNVG\GdiPlusFlatImpl.h" />
+    <ClInclude Include="include\FlatNVG\GdiPlusFlatTypes.h" />
+    <ClInclude Include="include\FlatNVG\general-private.h" />
+    <ClInclude Include="include\FlatNVG\general.h" />
+    <ClInclude Include="include\FlatNVG\graphics-cairo-private.h" />
+    <ClInclude Include="include\FlatNVG\graphics-metafile-private.h" />
+    <ClInclude Include="include\FlatNVG\graphics-path-private.h" />
+    <ClInclude Include="include\FlatNVG\graphics-path.h" />
+    <ClInclude Include="include\FlatNVG\graphics-pathiterator-private.h" />
+    <ClInclude Include="include\FlatNVG\graphics-pathiterator.h" />
+    <ClInclude Include="include\FlatNVG\graphics-private.h" />
+    <ClInclude Include="include\FlatNVG\graphics.h" />
+    <ClInclude Include="include\FlatNVG\hatchbrush-private.h" />
+    <ClInclude Include="include\FlatNVG\hatchbrush.h" />
+    <ClInclude Include="include\FlatNVG\image-private.h" />
+    <ClInclude Include="include\FlatNVG\image.h" />
+    <ClInclude Include="include\FlatNVG\imageattributes-private.h" />
+    <ClInclude Include="include\FlatNVG\imageattributes.h" />
+    <ClInclude Include="include\FlatNVG\lineargradientbrush-private.h" />
+    <ClInclude Include="include\FlatNVG\lineargradientbrush.h" />
+    <ClInclude Include="include\FlatNVG\matrix-private.h" />
+    <ClInclude Include="include\FlatNVG\matrix.h" />
+    <ClInclude Include="include\FlatNVG\metafile-private.h" />
+    <ClInclude Include="include\FlatNVG\metafile.h" />
+    <ClInclude Include="include\FlatNVG\pathgradientbrush-private.h" />
+    <ClInclude Include="include\FlatNVG\pathgradientbrush.h" />
+    <ClInclude Include="include\FlatNVG\pen-private.h" />
+    <ClInclude Include="include\FlatNVG\pen.h" />
+    <ClInclude Include="include\FlatNVG\region-bitmap-private.h" />
+    <ClInclude Include="include\FlatNVG\region-path-tree-private.h" />
+    <ClInclude Include="include\FlatNVG\region-private.h" />
+    <ClInclude Include="include\FlatNVG\region.h" />
+    <ClInclude Include="include\FlatNVG\solidbrush-private.h" />
+    <ClInclude Include="include\FlatNVG\solidbrush.h" />
+    <ClInclude Include="include\FlatNVG\stringformat-private.h" />
+    <ClInclude Include="include\FlatNVG\stringformat.h" />
+    <ClInclude Include="include\FlatNVG\text-private.h" />
+    <ClInclude Include="include\FlatNVG\text.h" />
+    <ClInclude Include="include\FlatNVG\texturebrush-private.h" />
+    <ClInclude Include="include\FlatNVG\texturebrush.h" />
+    <ClInclude Include="include\GdiPlus.h" />
+    <ClInclude Include="include\gdiplusbase.h" />
+    <ClInclude Include="include\GdiPlusBrush.h" />
+    <ClInclude Include="include\GdiPlusColor.h" />
+    <ClInclude Include="include\GdiPlusColorMatrix.h" />
+    <ClInclude Include="include\gdipluseffects.h" />
+    <ClInclude Include="include\GdiPlusEnums.h" />
+    <ClInclude Include="include\gdiplusflat.h" />
+    <ClInclude Include="include\gdiplusgpstubs.h" />
+    <ClInclude Include="include\GdiPlusGraphics.h" />
+    <ClInclude Include="include\gdiplusheaders.h" />
+    <ClInclude Include="include\gdiplusimageattributes.h" />
+    <ClInclude Include="include\gdiplusimagecodec.h" />
+    <ClInclude Include="include\GdiPlusImaging.h" />
+    <ClInclude Include="include\gdiplusimpl.h" />
+    <ClInclude Include="include\gdiplusinit.h" />
+    <ClInclude Include="include\GdiPlusLineCaps.h" />
+    <ClInclude Include="include\GdiPlusMatrix.h" />
+    <ClInclude Include="include\gdiplusmem.h" />
+    <ClInclude Include="include\gdiplusmetafile.h" />
+    <ClInclude Include="include\gdiplusmetaheader.h" />
+    <ClInclude Include="include\GdiPlusPath.h" />
+    <ClInclude Include="include\GdiPlusPen.h" />
+    <ClInclude Include="include\GdiPlusPixelFormats.h" />
+    <ClInclude Include="include\GdiPlusStringFormat.h" />
+    <ClInclude Include="include\GdiPlusTypes.h" />
+    <ClInclude Include="include\glib.h" />
+    <ClInclude Include="include\win32structs.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\MSFS\Render\nanovg.cpp" />
+    <ClCompile Include="src\FlatNVG\adjustablearrowcap.cpp" />
+    <ClCompile Include="src\FlatNVG\bitmap.cpp" />
+    <ClCompile Include="src\FlatNVG\brush.cpp" />
+    <ClCompile Include="src\FlatNVG\customlinecap.cpp" />
+    <ClCompile Include="src\FlatNVG\font.cpp" />
+    <ClCompile Include="src\FlatNVG\general.cpp" />
+    <ClCompile Include="src\FlatNVG\graphics-cairo.cpp" />
+    <ClCompile Include="src\FlatNVG\graphics-path.cpp" />
+    <ClCompile Include="src\FlatNVG\graphics-pathiterator.cpp" />
+    <ClCompile Include="src\FlatNVG\graphics.cpp" />
+    <ClCompile Include="src\FlatNVG\hatchbrush.cpp" />
+    <ClCompile Include="src\FlatNVG\image.cpp" />
+    <ClCompile Include="src\FlatNVG\imageattributes.cpp" />
+    <ClCompile Include="src\FlatNVG\lineargradientbrush.cpp" />
+    <ClCompile Include="src\FlatNVG\matrix.cpp" />
+    <ClCompile Include="src\FlatNVG\metafile.cpp" />
+    <ClCompile Include="src\FlatNVG\pathgradientbrush.cpp" />
+    <ClCompile Include="src\FlatNVG\pen.cpp" />
+    <ClCompile Include="src\FlatNVG\region-bitmap.cpp" />
+    <ClCompile Include="src\FlatNVG\region-path-tree.cpp" />
+    <ClCompile Include="src\FlatNVG\region.cpp" />
+    <ClCompile Include="src\FlatNVG\solidbrush.cpp" />
+    <ClCompile Include="src\FlatNVG\stringformat.cpp" />
+    <ClCompile Include="src\FlatNVG\text.cpp" />
+    <ClCompile Include="src\FlatNVG\texturebrush.cpp" />
+    <ClCompile Include="src\GdiPlusCustomLineCap.cpp" />
+    <ClCompile Include="src\GdiPlusFont.cpp" />
+    <ClCompile Include="src\GdiplusImage.cpp" />
+    <ClCompile Include="src\GdiPlusPath.cpp" />
+    <ClCompile Include="src\GdiplusRegion.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\FlatNVG\GdiPlusHatchStylePatterns.inl" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{B235AE5B-904F-42A3-AA72-64B7DC0807F0}</ProjectGuid>
+    <RootNamespace>Module</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|MSFS'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>MSFS</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|MSFS'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>MSFS</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|MSFS'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|MSFS'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|MSFS'">
+    <TargetExt>.a</TargetExt>
+    <GenerateManifest />
+    <LinkIncremental />
+    <IncludePath>$(MSFS_IncludePath)</IncludePath>
+    <TargetName>gdiplus_debug</TargetName>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|MSFS'">
+    <TargetExt>.a</TargetExt>
+    <IncludePath>$(MSFS_IncludePath)</IncludePath>
+    <TargetName>gdiplus</TargetName>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|MSFS'">
+    <ClCompile>
+      <WarningLevel>
+      </WarningLevel>
+      <Optimization>
+      </Optimization>
+      <SDLCheck>
+      </SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>__wasi__;_STRING_H_CPLUSPLUS_98_CONFORMANCE_;_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_;_LIBCPP_HAS_NO_THREADS;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ShowIncludes>false</ShowIncludes>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeTypeInfo>
+      </RuntimeTypeInfo>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BasicRuntimeChecks>
+      </BasicRuntimeChecks>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+      <NoEntryPoint>true</NoEntryPoint>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <RandomizedBaseAddress>
+      </RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <GenerateDebugInformation>
+      </GenerateDebugInformation>
+      <ProgramDatabaseFile>
+      </ProgramDatabaseFile>
+      <ImportLibrary>
+      </ImportLibrary>
+      <ProfileGuidedDatabase>
+      </ProfileGuidedDatabase>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>XCOPY "$(TargetDir)$(TargetFileName)" "$(ProjectDir)..\..\lib\$(TargetFileName)*" /Y
+XCOPY "$(ProjectDir)\include" "$(ProjectDir)..\..\include\gdiplus"/E /H /I</Command>
+    </PostBuildEvent>
+    <Manifest>
+      <AdditionalOptions>
+      </AdditionalOptions>
+    </Manifest>
+    <PreBuildEvent>
+      <Command>rd /s /q "$(ProjectDir)..\..\include\gdiplus"</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|MSFS'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include</AdditionalIncludeDirectories>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PreprocessorDefinitions>__wasi__;_STRING_H_CPLUSPLUS_98_CONFORMANCE_;_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_;_LIBCPP_HAS_NO_THREADS;_WINDLL;GDIFLAT_SAFE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <NoEntryPoint>true</NoEntryPoint>
+    </Link>
+    <PostBuildEvent>
+      <Command>XCOPY "$(TargetDir)$(TargetFileName)" "$(ProjectDir)..\..\lib\$(TargetFileName)*" /Y
+XCOPY "$(ProjectDir)\include" "$(ProjectDir)..\..\include\gdiplus"/E /H /I</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>rd /s /q "$(ProjectDir)..\..\include\gdiplus"</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

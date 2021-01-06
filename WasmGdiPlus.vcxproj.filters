@@ -1,0 +1,380 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{fd314cff-3c75-4af9-96cd-2ca3cb83fac4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{23647bf2-0b6c-40a4-ad93-7dde56fc865d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\flat">
+      <UniqueIdentifier>{037cb476-1a33-4908-b4fd-2fdafe26b06d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flat">
+      <UniqueIdentifier>{11a27604-362e-446f-a804-d2e19b901503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flat-private">
+      <UniqueIdentifier>{94317ffb-f606-4c3a-a1d0-415e2d0da5ec}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\gdiplusimpl.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gdiplusinit.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GdiPlusLineCaps.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GdiPlusMatrix.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gdiplusmem.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gdiplusmetafile.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gdiplusmetaheader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GdiPlusPath.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GdiPlusPen.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GdiPlusPixelFormats.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GdiPlusStringFormat.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GdiPlusTypes.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\glib.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\win32structs.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GdiPlus.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gdiplusbase.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GdiPlusBrush.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GdiPlusColor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GdiPlusColorMatrix.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gdipluseffects.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GdiPlusEnums.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gdiplusflat.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gdiplusgpstubs.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GdiPlusGraphics.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gdiplusheaders.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gdiplusimageattributes.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gdiplusimagecodec.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GdiPlusImaging.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\texturebrush.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\adjustablearrowcap.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\bitmap.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\brush.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\codecs.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\customlinecap.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\font.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\fontcollection.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\fontfamily.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\GdiPlusFlatImpl.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\GdiPlusFlatTypes.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\general.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\graphics.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\graphics-path.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\graphics-pathiterator.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\hatchbrush.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\image.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\imageattributes.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\lineargradientbrush.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\matrix.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\metafile.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\pathgradientbrush.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\pen.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\region.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\solidbrush.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\stringformat.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\text.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\text-private.h">
+      <Filter>include\flat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\adjustablearrowcap-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\bitmap-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\brush-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\codecs-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\customlinecap-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\fontcollection-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\fontfamily-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\graphics-cairo-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\graphics-metafile-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\graphics-pathiterator-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\graphics-path-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\hatchbrush-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\graphics-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\imageattributes-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\lineargradientbrush-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\matrix-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\metafile-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\pathgradientbrush-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\pen-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\region-path-tree-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\region-bitmap-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\solidbrush-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\region-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\stringformat-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\texturebrush-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\image-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\general-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\gdiplus-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FlatNVG\font-private.h">
+      <Filter>include\flat-private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\MSFS\Render\nanovg.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\GdiplusImage.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GdiPlusPath.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GdiplusRegion.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GdiPlusCustomLineCap.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GdiPlusFont.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\region-path-tree.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\solidbrush.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\stringformat.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\text.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\texturebrush.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\adjustablearrowcap.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\bitmap.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\brush.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\customlinecap.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\font.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\general.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\graphics.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\graphics-cairo.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\graphics-path.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\graphics-pathiterator.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\hatchbrush.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\image.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\imageattributes.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\lineargradientbrush.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\matrix.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\metafile.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\pathgradientbrush.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\pen.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\region.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlatNVG\region-bitmap.cpp">
+      <Filter>source\flat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\MSFS\Render\nanovg.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\FlatNVG\GdiPlusHatchStylePatterns.inl">
+      <Filter>source\flat</Filter>
+    </None>
+  </ItemGroup>
+</Project>

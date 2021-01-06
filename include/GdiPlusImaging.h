@@ -1,10 +1,29 @@
 // Copyright (C) Asobo Studio. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
+// based on the w32api implementation of the GDI+ wrappers: 
+//
+//   Created by Markus Koenig <markus@stber-koenig.de>
 
 
 #ifndef __GDIPLUS_IMAGING_H
 #define __GDIPLUS_IMAGING_H
-namespace Gdiplus {
+
+#include "win32structs.h"
+namespace Gdiplus
+{
+	typedef enum {
+		BMP,
+		TIF,
+		GIF,
+		PNG,
+		JPEG,
+		EXIF,
+		WMF,
+		EMF,
+		ICON,
+		MEMBMP,
+		INVALID
+	} ImageFormat;
 
 	typedef enum ImageCodecFlags {
 		ImageCodecFlagsEncoder = 0x00000001,
@@ -67,8 +86,8 @@ namespace Gdiplus {
 	} RotateFlipType;
 
 	typedef struct BitmapData {
-		::UINT Width;
-		::UINT Height;
+		UINT Width;
+		UINT Height;
 		INT Stride;
 		INT PixelFormat;  /* MSDN: "PixelFormat PixelFormat;" */
 		VOID* Scan0;
@@ -81,7 +100,7 @@ namespace Gdiplus {
 		ULONG Type;
 		VOID* Value;
 	} EncoderParameter;
-	/*
+
 	typedef struct EncoderParameters {
 		UINT Count;
 		EncoderParameter Parameter[1];
@@ -90,39 +109,39 @@ namespace Gdiplus {
 	typedef struct ImageCodecInfo {
 		CLSID Clsid;
 		GUID FormatID;
-		WCHAR *CodecName;
-		WCHAR *DllName;
-		WCHAR *FormatDescription;
-		WCHAR *FilenameExtension;
-		WCHAR *MimeType;
+		WCHAR* CodecName;
+		WCHAR* DllName;
+		WCHAR* FormatDescription;
+		WCHAR* FilenameExtension;
+		WCHAR* MimeType;
 		DWORD Flags;
 		DWORD Version;
 		DWORD SigCount;
 		DWORD SigSize;
-		BYTE *SigPattern;
-		BYTE *SigMask;
+		BYTE* SigPattern;
+		BYTE* SigMask;
 	} ImageCodecInfo;
-	*/
+
 	/* FIXME: The order of fields is probably wrong. Please don't use this
 	 * structure until this problem is resolved!  Can't test because
 	 * ImageItemData is not supported by the redistributable GDI+ 1.0 DLL. */
 	typedef struct ImageItemData {
-		::UINT Size;
-		::UINT Position;
+		UINT Size;
+		UINT Position;
 		VOID* Desc;
-		::UINT DescSize;
-		::UINT* Data;
-		::UINT DataSize;
-		::UINT Cookie;
+		UINT DescSize;
+		UINT* Data;
+		UINT DataSize;
+		UINT Cookie;
 	} ImageItemData;
-	/*
+
 	typedef struct PropertyItem {
 		PROPID id;
 		ULONG length;
 		WORD type;
-		VOID *value;
+		VOID* value;
 	} PropertyItem;
-	*/
+
 #define PropertyTagGpsVer ((PROPID) 0x0000)
 #define PropertyTagGpsLatitudeRef ((PROPID) 0x0001)
 #define PropertyTagGpsLatitude ((PROPID) 0x0002)

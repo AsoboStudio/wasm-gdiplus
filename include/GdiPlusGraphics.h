@@ -1,693 +1,1572 @@
 // Copyright (C) Asobo Studio. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
+// based on the w32api implementation of the GDI+ wrappers: 
+//
+//   Created by Markus Koenig <markus@stber-koenig.de>
 
 
 #ifndef __GDIPLUS_GRAPHICS_H
 #define __GDIPLUS_GRAPHICS_H
 
-#include "gdiplus.h"
+#include "GdiPlus.h"
+#include "gdiplusflat.h"
 
-#ifndef __cplusplus
-#error "A C++ compiler is required to include gdiplusgraphics.h."
+namespace Gdiplus
+{
+	class Graphics : public GdiplusBase
+	{
+		friend class Bitmap;
+		friend class CachedBitmap;
+		friend class Font;
+		friend class GraphicsPath;
+		friend class Metafile;
+		friend class Region;
+
+	
+#ifdef _MSFS_WASM_PROXY_GDIPLUS
+	private:
+		bool bIsCtxInternal;
+	public:
+		NVGcontext* ctx;
+
+		Graphics(NVGcontext* _ctx) : nativeGraphics(NULL), lastStatus(Ok)
+		{
+			ctx = _ctx;
+			bIsCtxInternal = false;
+			lastStatus = DLLExports::GdipCreateFromHDC(
+				(HDC)ctx, &nativeGraphics);
+		}
+
+		Graphics(FsContext fsctx) : nativeGraphics(NULL), lastStatus(Ok)
+		{
+			NVGparams params;
+			params.userPtr = fsctx;
+			params.edgeAntiAlias = true;
+			NVGcontext* nvgctx = nvgCreateInternal(&params);
+			ctx = nvgctx;
+			bIsCtxInternal = true;
+
+			lastStatus = DLLExports::GdipCreateFromHDC(
+				(HDC)ctx, &nativeGraphics);
+		}
 #endif
-namespace Gdiplus {
-
-    class Graphics//: public GdiplusBase
-    {
-    public:
-        friend class Region;
-        friend class GraphicsPath;
-        friend class Image;
-        friend class Bitmap;
-        friend class Metafile;
-        friend class Font;
-        friend class FontFamily;
-        friend class FontCollection;
-        friend class CachedBitmap;
-
-        NVGcontext* ctx;
-
-        Graphics(NVGcontext* _ctx);
-        Graphics(Image* image);
-        Status DrawString(const WCHAR* string, INT length, const Font* font, const PointF& origin, const Brush* brush);
-        Status DrawString(const WCHAR* string, INT length, const Font* font, const PointF& origin, const StringFormat* stringFormat, const Brush* brush);
-        Status DrawString(const WCHAR* string, INT length, const Font* font, const RectF& layoutRect, const StringFormat* stringFormat, const Brush* brush);
-        Status DrawLine(const Pen* pen, REAL x1, REAL y1, REAL x2, REAL y2);
-        Status DrawLine(const Pen* pen, INT x1, INT y1, INT x2, INT y2);
-        Status DrawLine(const Pen* pen, const PointF& pt1, const PointF& pt2);
-        Status ResetClip();
-        Status ResetTransform();
-        Status SetTransform(const Matrix* matrix);
-        Status TranslateTransform(REAL dx, REAL dy, MatrixOrder order = MatrixOrderPrepend);
-        Status RotateTransform(REAL angle, MatrixOrder order = MatrixOrderPrepend);
-        Status ScaleTransform(REAL sx, REAL sy, MatrixOrder order = MatrixOrderPrepend);
-        Status DrawPolygon(const Pen* pen, const PointF* points, INT count);
-        Status DrawPolygon(const Pen* pen, const Point* points, INT count);
-        Status DrawRectangle(const Pen* pen, REAL x, REAL y, REAL width, REAL height);
-        Status DrawRectangle(const Pen* pen, INT x, INT y, INT width, INT height);
-        Status DrawRectangle(const Pen* pen, const RectF& rect);
-        Status DrawRectangle(const Pen* pen, const Rect& rect);
-        Status DrawCurve(const Pen* pen, const PointF* points, INT count);
-        Status DrawCurve(const Pen* pen, const Point* points, INT count);
-        Status DrawCurve(const Pen* pen, const PointF* points, INT count, REAL tension);
-        Status DrawCurve(const Pen* pen, const Point* points, INT count, REAL tension);
-        Status DrawCurve(const Pen* pen, const PointF* points, INT count, INT offset, INT numberOfSegments, REAL tension);
-        Status DrawCurve(const Pen* pen, const Point* points, INT count, INT offset, INT numberOfSegments, REAL tension);
-        Status DrawEllipse(const Pen* pen, REAL x, REAL y, REAL width, REAL height);
-        Status DrawEllipse(const Pen* pen, INT x, INT y, INT width, INT height);
-        Status DrawEllipse(const Pen* pen, const RectF& rect);
-        Status DrawEllipse(const Pen* pen, const Rect& rect);
-        Status DrawImage(Image* image, REAL x, REAL y);
-        Status DrawImage(Image* image, INT x, INT y);
-        Status DrawImage(Image* image, const PointF& point);
-        Status DrawImage(Image* image, const Point& point);
-        Status DrawImage(Image* image, REAL x, REAL y, REAL width, REAL height);
-        Status DrawImage(Image* image, INT x, INT y, INT width, INT height);
-        Status DrawImage(Image* image, const RectF& rect);
-        Status DrawImage(Image* image, const Rect& rect);
-        Status DrawImage(Image* image, const PointF* destPoints, INT count);
-        Status DrawImage(Image* image, const Point* destPoints, INT count);
-        Status DrawImage(Image* image, REAL x, REAL y, REAL srcx, REAL srcy, REAL srcwidth, REAL srcheight, Unit srcUnit);
-        Status DrawImage(Image* image, INT x, INT y, INT srcx, INT srcy, INT srcwidth, INT srcheight, Unit srcUnit);
-        /*
-        Status DrawImage(Image* image, const RectF& destRect, REAL srcx, REAL srcy, REAL srcwidth, REAL srcheight, Unit srcUnit, const ImageAttributes* imageAttributes = NULL, DrawImageAbort callback = NULL, VOID* callbackData = NULL);
-        Status DrawImage(Image* image, const Rect& destRect, INT srcx, INT srcy, INT srcwidth, INT srcheight, Unit srcUnit, const ImageAttributes* imageAttributes = NULL, DrawImageAbort callback = NULL, VOID* callbackData = NULL);
-        Status DrawImage(Image* image, const RectF& destRect, const RectF& sourceRect, Unit srcUnit, const ImageAttributes* imageAttributes = NULL);
-        Status DrawImage(Image* image, const PointF* destPoints, INT count, REAL srcx, REAL srcy, REAL srcwidth, REAL srcheight, Unit srcUnit, const ImageAttributes* imageAttributes = NULL, DrawImageAbort callback = NULL, VOID* callbackData = NULL);
-        Status DrawImage(Image* image, const Point* destPoints, INT count, INT srcx, INT srcy, INT srcwidth, INT srcheight, Unit srcUnit, const ImageAttributes* imageAttributes = NULL, DrawImageAbort callback = NULL, VOID* callbackData = NULL);
-        */
-        Status FillRectangle(const Brush* brush, REAL x, REAL y, REAL width, REAL height);
-        Status FillRectangle(const Brush* brush, INT x, INT y, INT width, INT height);
-        Status FillRectangle(const Brush* brush, const RectF& rect);
-        Status FillRectangle(const Brush* brush, const Rect& rect);
-        Status SetPageUnit(Unit unit);
-        Status DrawPath(const Pen* pen, const GraphicsPath* path);
-        Status FillEllipse(const Brush* brush, REAL x, REAL y, REAL width, REAL height);
-        Status FillEllipse(const Brush* brush, INT x, INT y, INT width, INT height);
-        Status FillEllipse(const Brush* brush, const RectF& rect);
-        Status FillEllipse(const Brush* brush, const Rect& rect);
-        Status FillPath(const Brush* brush, const GraphicsPath* path);
-        Status FillPie(const Brush* brush, REAL x, REAL y, REAL width, REAL height, REAL startAngle, REAL sweepAngle);
-        Status FillPie(const Brush* brush, INT x, INT y, INT width, INT height, REAL startAngle, REAL sweepAngle);
-        Status FillPie(const Brush* brush, const RectF& rect, REAL startAngle, REAL sweepAngle);
-        Status FillPie(const Brush* brush, const Rect& rect, REAL startAngle, REAL sweepAngle);
-        Status FillPolygon(const Brush* brush, const PointF* points, INT count);
-        Status FillPolygon(const Brush* brush, const Point* points, INT count);
-        Status FillPolygon(const Brush* brush, const PointF* points, INT count, FillMode fillMode);
-        Status FillPolygon(const Brush* brush, const Point* points, INT count, FillMode fillMode);
-        Status MeasureString(const WCHAR* string, INT length, const Font* font, const RectF& layoutRect, RectF* boundingBox) const;
-        Status MeasureString(const WCHAR* string, INT length, const Font* font, const RectF& layoutRect, const StringFormat* stringFormat, RectF* boundingBox, INT* codepointsFitted = NULL, INT* linesFitted = NULL) const;
-        Status MeasureString(const WCHAR* string, INT length, const Font* font, const SizeF& layoutRectSize, const StringFormat* stringFormat, SizeF* size, INT* codepointsFitted = NULL, INT* linesFitted = NULL) const;
-        Status MeasureString(const WCHAR* string, INT length, const Font* font, const PointF& origin, RectF* boundingBox) const;
-        Status MeasureString(const WCHAR* string, INT length, const Font* font, const PointF& origin, const StringFormat* stringFormat, RectF* boundingBox) const;
-        Status SetSmoothingMode(SmoothingMode smoothingMode);
-        Status SetTextRenderingHint(TextRenderingHint textRenderingHint);
-        Status Clear(const Color& color);
-        Status DrawArc(const Pen* pen, REAL x, REAL y, REAL width, REAL height, REAL startAngle, REAL sweepAngle);
-        Status DrawArc(const Pen* pen, INT x, INT y, INT width, INT height, REAL startAngle, REAL sweepAngle);
-        Status DrawArc(const Pen* pen, const RectF& rect, REAL startAngle, REAL sweepAngle);
-        Status DrawArc(const Pen* pen, const Rect& rect, REAL startAngle, REAL sweepAngle);
-        Status DrawBezier(const Pen* pen, REAL x1, REAL y1, REAL x2, REAL y2, REAL x3, REAL y3, REAL x4, REAL y4);
-        Status DrawBezier(const Pen* pen, INT x1, INT y1, INT x2, INT y2, INT x3, INT y3, INT x4, INT y4);
-        Status DrawBezier(const Pen* pen, const PointF& pt1, const PointF& pt2, const PointF& pt3, const PointF& pt4);
-        Status DrawBezier(const Pen* pen, const Point& pt1, const Point& pt2, const Point& pt3, const Point& pt4);
-        Status DrawLines(const Pen* pen, const PointF* points, INT count);
-        Status GetTransform(Matrix* matrix) const;
-        Status GetVisibleClipBounds(RectF* rect) const;
-        Status GetVisibleClipBounds(Rect* rect) const;
-        Status SetClip(const GraphicsPath* path, CombineMode combineMode = CombineModeReplace);
-
-        Status Release();
-        ~Graphics();
-
-    private:
-        int m_brushPatterns[HatchStyleTotal];
-        void ConvertBrush(const Brush* brush);
-        void nvg_SetAlignment(const StringFormat* stringFormat);
-        bool m_clipped;
-
-        /**** NOT SUPPORTED YET***\
-            static Graphics* FromImage(IN Image *image);
-            VOID Flush(IN FlushIntention intention = FlushIntentionFlush);
-
-            //------------------------------------------------------------------------
-            // Rendering modes
-            //------------------------------------------------------------------------
-            Status SetRenderingOrigin(IN INT x, IN INT y);
-            Status GetRenderingOrigin(OUT INT *x, OUT INT *y) const;
-            Status SetCompositingMode(IN CompositingMode compositingMode);
-            CompositingMode GetCompositingMode() const;
-            Status SetCompositingQuality(IN CompositingQuality compositingQuality);
-            CompositingQuality GetCompositingQuality() const;
-            Status SetTextRenderingHint(IN TextRenderingHint newMode);
-            TextRenderingHint GetTextRenderingHint() const;
-            Status SetTextContrast(IN UINT contrast);
-            UINT GetTextContrast() const;
-            InterpolationMode GetInterpolationMode() const;
-            Status SetInterpolationMode(IN InterpolationMode interpolationMode);
-            Status SetAbort(GdiplusAbort *pIAbort);
-            SmoothingMode GetSmoothingMode() const;
-            Status SetSmoothingMode(IN SmoothingMode smoothingMode);
-            PixelOffsetMode GetPixelOffsetMode() const;
-            Status SetPixelOffsetMode(IN PixelOffsetMode pixelOffsetMode);
-
-            //------------------------------------------------------------------------
-            // Manipulate current world transform
-            //------------------------------------------------------------------------
-
-            Status MultiplyTransform(IN const Matrix* matrix,
-                                     IN MatrixOrder order = MatrixOrderPrepend);
-
-            Status TranslateTransform(IN REAL dx,
-                                      IN REAL dy,
-                                      IN MatrixOrder order = MatrixOrderPrepend);
-            Status ScaleTransform(IN REAL sx,
-                                  IN REAL sy,
-                                  IN MatrixOrder order = MatrixOrderPrepend);
-
-            Status RotateTransform(IN REAL angle,
-                                   IN MatrixOrder order = MatrixOrderPrepend);
-
-            Status GetTransform(OUT Matrix* matrix) const;
-            Status SetPageUnit(IN Unit unit);
-
-            Status SetPageScale(IN REAL scale); GetPageUnit() const;
-            REAL GetPageScale() const;
-
-            REAL GetDpiX() const;
-            REAL GetDpiY() const;
-
-            Status TransformPoints(IN CoordinateSpace destSpace,
-                                   IN CoordinateSpace srcSpace,
-                                   IN OUT PointF* pts,
-                                   IN INT count) const;
-
-            Status TransformPoints(IN CoordinateSpace destSpace,
-                                   IN CoordinateSpace srcSpace,
-                                   IN OUT Point* pts,
-                                   IN INT count) const;
-
-            //------------------------------------------------------------------------
-            // GetNearestColor (for <= 8bpp surfaces).  Note: Alpha is ignored.
-            //------------------------------------------------------------------------
-              Status GetNearestColor(IN OUT Color* color) const;
-
-             //------------------------------------------------------------------------
-            // Drawing functions
-            //------------------------------------------------------------------------
-            Status DrawLines(IN const Pen* pen,
-                             IN const PointF* points,
-                             IN INT count);
-
-
-            Status DrawLine(IN const Pen* pen,
-                            IN INT x1,
-                            IN INT y1,
-                            IN INT x2,
-                            IN INT y2);
-
-            Status DrawLine(IN const Pen* pen,
-                            IN const Point& pt1,
-                            IN const Point& pt2);
-
-            Status DrawLines(IN const Pen* pen,
-                             IN const Point* points,
-                             IN INT count);
-
-            Status DrawBezier(IN const Pen* pen,
-                              IN REAL x1,
-                              IN REAL y1,
-                              IN REAL x2,
-                              IN REAL y2,
-                              IN REAL x3,
-                              IN REAL y3,
-                              IN REAL x4,
-                              IN REAL y4);
-
-            Status DrawBezier(IN const Pen* pen,
-                              IN const PointF& pt1,
-                              IN const PointF& pt2,
-                              IN const PointF& pt3,
-                              IN const PointF& pt4);
-            Status DrawBeziers(IN const Pen* pen,
-                               IN const PointF* points,
-                               IN INT count);
-
-            Status DrawBezier(IN const Pen* pen,
-                              IN INT x1,
-                              IN INT y1,
-                              IN INT x2,
-                              IN INT y2,
-                              IN INT x3,
-                              IN INT y3,
-                              IN INT x4,
-                              IN INT y4);
-
-            Status DrawBezier(IN const Pen* pen,
-                              IN const Point& pt1,
-                              IN const Point& pt2,
-                              IN const Point& pt3,
-                              IN const Point& pt4);
-
-            Status DrawBeziers(IN const Pen* pen,
-                               IN const Point* points,
-                               IN INT count);
-
-            Status DrawPath(IN const Pen* pen,
-                            IN const GraphicsPath* path);
-
-            Status DrawCurve(IN const Pen* pen,
-                             IN const PointF* points,
-                             IN INT count);
-
-            Status DrawCurve(IN const Pen* pen,
-                             IN const PointF* points,
-                             IN INT count,
-                             IN REAL tension);
-
-            Status DrawCurve(IN const Pen* pen,
-                             IN const PointF* points,
-                             IN INT count,
-                             IN INT offset,
-                             IN INT numberOfSegments,
-                             IN REAL tension = 0.5f);us DrawCurve(IN const Pen* pen,
-                             IN const Point* points,
-                             IN INT count);
-
-            Status DrawCurve(IN const Pen* pen,
-                             IN const Point* points,
-                             IN INT count,
-                             IN REAL tension);
-
-            Status DrawCurve(IN const Pen* pen,
-                             IN const Point* points,
-                             IN INT count,
-                             IN INT offset,
-                             IN INT numberOfSegments,
-                             IN REAL tension = 0.5f);
-
-            Status DrawClosedCurve(IN const Pen* pen,
-                                   IN const PointF* points,
-                                   IN INT count);
-            Status DrawClosedCurve(IN const Pen *pen,
-                                   IN const PointF* points,
-                                   IN INT count,
-                                   IN REAL tension);
-
-            Status DrawClosedCurve(IN const Pen* pen,
-                                   IN const Point* points,
-                                   IN INT count);
-
-            Status DrawClosedCurve(IN const Pen *pen,
-                                   IN const Point* points,
-                                   IN INT count,
-                                   IN REAL tension);
-
-            Status Clear(IN const Color &color);
-
-            Status FillRectangles(IN const Brush* brush,
-                                  IN const RectF* rects,
-                                  IN INT count);
-
-            Status FillRectangles(IN const Brush* brush,
-                                  IN const Rect* rects,
-                                  IN INT count);
-
-            Status FillPath(IN const Brush* brush,
-                            IN const GraphicsPath* path);
-
-            Status FillClosedCurve(IN const Brush* brush,
-                                   IN const PointF* points,
-                                   IN INT count);
-
-            Status FillClosedCurve(IN const Brush* brush,
-                                   IN const PointF* points,
-                                   IN INT count,
-                                   IN FillMode fillMode,
-                                   IN REAL tension = 0.5f);
-            Status FillClosedCurve(IN const Brush* brush,
-                                   IN const Point* points,
-                                   IN INT count);
-
-            Status FillClosedCurve(IN const Brush* brush,
-                                   IN const Point* points,
-                                   IN INT count,
-                                   IN FillMode fillMode,
-                                   IN REAL tension = 0.5f);
-
-            Status FillRegion(IN const Brush* brush,
-                              IN const Region* region);
-
-            Status
-            DrawString(
-                IN const WCHAR        *string,
-                IN INT                 length,
-                IN const Font         *font,
-                IN const RectF        &layoutRect,
-                IN const StringFormat *stringFormat,
-                IN const Brush        *brush
-            );
-
-            Status
-            DrawString(
-                const WCHAR        *string,
-                INT                 length,
-                const Font         *font,
-                const PointF       &origin,
-                const Brush        *brush
-            );
-
-            Status
-            DrawString(
-                const WCHAR        *string,
-                INT                 length,
-                const Font         *font,
-                const PointF       &origin,
-                const StringFormat *stringFormat,
-                const Brush        *brush
-            );
-
-            Status
-            MeasureString(
-                IN const WCHAR        *string,
-                IN INT                 length,
-                IN const Font         *font,
-                IN const RectF        &layoutRect,
-                IN const StringFormat *stringFormat,
-                OUT RectF             *boundingBox,
-                OUT INT               *codepointsFitted = 0,
-                OUT INT               *linesFilled      = 0
-            ) const;
-
-            Status
-            MeasureString(
-                IN const WCHAR        *string,
-                IN INT                 length,
-                IN const Font         *font,
-                IN const SizeF        &layoutRectSize,
-                IN const StringFormat *stringFormat,
-                OUT SizeF             *size,
-                OUT INT               *codepointsFitted = 0,
-                OUT INT               *linesFilled      = 0
-            ) const;
-
-            Status
-            MeasureString(
-                IN const WCHAR        *string,
-                IN INT                 length,
-                IN const Font         *font,
-                IN const PointF       &origin,
-                IN const StringFormat *stringFormat,
-                OUT RectF             *boundingBox
-            ) const;
-
-            Status
-            MeasureString(
-                IN const WCHAR  *string,
-                IN INT           length,
-                IN const Font   *font,
-                IN const RectF  &layoutRect,
-                OUT RectF       *boundingBox
-            ) const;
-
-            Status
-            MeasureString(
-                IN const WCHAR  *string,
-                IN INT           length,
-                IN const Font   *font,
-                IN const PointF &origin,
-                OUT RectF       *boundingBox
-            ) const;
-
-            Status
-            MeasureCharacterRanges(
-                IN const WCHAR        *string,
-                IN INT                 length,
-                IN const Font         *font,
-                IN const RectF        &layoutRect,
-                IN const StringFormat *stringFormat,
-                IN INT                 regionCount,
-                OUT Region            *regions
-            ) const;
-
-
-            Status DrawDriverString(
-                IN const UINT16  *text,
-                IN INT            length,
-                IN const Font    *font,
-                IN const Brush   *brush,
-                IN const PointF  *positions,
-                IN INT            flags,
-                IN const Matrix        *matrix
-            );
-
-            Status MeasureDriverString(
-                IN const UINT16  *text,
-                IN INT            length,
-                IN const Font    *font,
-                IN const PointF  *positions,
-                IN INT            flags,
-                IN const Matrix        *matrix,
-                OUT RectF        *boundingBox
-            ) const;
-
-            // Draw a cached bitmap on this graphics destination offset by
-            // x, y. Note this will fail with WrongState if the CachedBitmap
-            // native format differs from this Graphics.
-
-            Status DrawCachedBitmap(IN CachedBitmap *cb,
-                                    IN INT x,
-                                    IN INT y);
-
-
-            // The following methods are for playing an EMF+ to a graphics
-            // via the enumeration interface.  Each record of the EMF+ is
-            // sent to the callback (along with the callbackData).  Then
-            // the callback can invoke the Metafile::PlayRecord method
-            // to play the particular record.
-
-            Status
-            EnumerateMetafile(
-                IN const Metafile *        metafile,
-                IN const PointF &          destPoint,
-                IN EnumerateMetafileProc   callback,
-                IN VOID *                  callbackData    = NULL,
-                IN const ImageAttributes *       imageAttributes = NULL
-                );
-
-            Status
-            EnumerateMetafile(
-                IN const Metafile *        metafile,
-                IN const Point &           destPoint,
-                IN EnumerateMetafileProc   callback,
-                IN VOID *                  callbackData    = NULL,
-                IN const ImageAttributes *       imageAttributes = NULL
-                );
-
-            Status
-            EnumerateMetafile(
-                IN const Metafile *        metafile,
-                IN const RectF &           destRect,
-                IN EnumerateMetafileProc   callback,
-                IN VOID *                  callbackData    = NULL,
-                IN const ImageAttributes *       imageAttributes = NULL
-                );
-
-            Status
-            EnumerateMetafile(
-                IN const Metafile *        metafile,
-                IN const Rect &            destRect,
-                IN EnumerateMetafileProc   callback,
-                IN VOID *                  callbackData    = NULL,
-                IN const ImageAttributes *       imageAttributes = NULL
-                );
-
-            Status
-            EnumerateMetafile(
-                IN const Metafile *        metafile,
-                IN const PointF *          destPoints,
-                IN INT                     count,
-                IN EnumerateMetafileProc   callback,
-                IN VOID *                  callbackData    = NULL,
-                IN const ImageAttributes *       imageAttributes = NULL
-                );
-
-            Status
-            EnumerateMetafile(
-                IN const Metafile *        metafile,
-                IN const Point *           destPoints,
-                IN INT                     count,
-                IN EnumerateMetafileProc   callback,
-                IN VOID *                  callbackData    = NULL,
-                IN const ImageAttributes *       imageAttributes = NULL
-                );
-
-            Status
-            EnumerateMetafile(
-                IN const Metafile *        metafile,
-                IN const PointF &          destPoint,
-                IN const RectF &           srcRect,
-                IN Unit                    srcUnit,
-                IN EnumerateMetafileProc   callback,
-                IN VOID *                  callbackData    = NULL,
-                IN const ImageAttributes *       imageAttributes = NULL
-                );
-
-            Status
-            EnumerateMetafile(
-                IN const Metafile *        metafile,
-                IN const Point &           destPoint,
-                IN const Rect &            srcRect,
-                IN Unit                    srcUnit,
-                IN EnumerateMetafileProc   callback,
-                IN VOID *                  callbackData    = NULL,
-                IN const ImageAttributes *       imageAttributes = NULL
-                );
-
-            Status
-            EnumerateMetafile(
-                IN const Metafile *        metafile,
-                IN const RectF &           destRect,
-                IN const RectF &           srcRect,
-                IN Unit                    srcUnit,
-                IN EnumerateMetafileProc   callback,
-                IN VOID *                  callbackData    = NULL,
-                IN const ImageAttributes *       imageAttributes = NULL
-                );
-
-            Status
-            EnumerateMetafile(
-                IN const Metafile *        metafile,
-                IN const Rect &            destRect,
-                IN const Rect &            srcRect,
-                IN Unit                    srcUnit,
-                IN EnumerateMetafileProc   callback,
-                IN VOID *                  callbackData    = NULL,
-                IN const ImageAttributes *       imageAttributes = NULL
-                );
-
-            Status
-            EnumerateMetafile(
-                IN const Metafile *        metafile,
-                IN const PointF *          destPoints,
-                IN INT                     count,
-                IN const RectF &           srcRect,
-                IN Unit                    srcUnit,
-                IN EnumerateMetafileProc   callback,
-                IN VOID *                  callbackData    = NULL,
-                IN const ImageAttributes *       imageAttributes = NULL
-                );
-
-            Status
-            EnumerateMetafile(
-                IN const Metafile *        metafile,
-                IN const Point *           destPoints,
-                IN INT                     count,
-                IN const Rect &            srcRect,
-                IN Unit                    srcUnit,
-                IN EnumerateMetafileProc   callback,
-                IN VOID *                  callbackData    = NULL,
-                IN const ImageAttributes *       imageAttributes = NULL
-                );
-            Status SetClip(IN const Graphics* g,
-                           IN CombineMode combineMode = CombineModeReplace);
-
-            Status SetClip(IN const RectF& rect,
-                           IN CombineMode combineMode = CombineModeReplace);
-
-            Status SetClip(IN const Rect& rect,
-                           IN CombineMode combineMode = CombineModeReplace);
-
-            Status SetClip(IN const Region* region,
-                           IN CombineMode combineMode = CombineModeReplace);
-
-            // This is different than the other SetClip methods because it assumes
-            // that the HRGN is already in device units, so it doesn't transform
-            // the coordinates in the HRGN.
-
-            Status SetClip(IN HRGN hRgn,
-                           IN CombineMode combineMode = CombineModeReplace);
-
-            Status IntersectClip(IN const RectF& rect);
-            Status IntersectClip(IN const Rect& rect);
-
-            Status IntersectClip(IN const Region* region);
-
-            Status ExcludeClip(IN const RectF& rect);
-
-            Status ExcludeClip(IN const Rect& rect);
-
-            Status ExcludeClip(IN const Region* region);
-
-            Status ResetClip();
-
-            Status TranslateClip(IN REAL dx,
-                                 IN REAL dy);
-            Status TranslateClip(IN INT dx,
-                                 IN INT dy);
-
-            Status GetClip(OUT Region* region) const;
-            Status GetClipBounds(OUT RectF* rect) const;
-            Status GetClipBounds(OUT Rect* rect) const;
-
-            BOOL IsClipEmpty() const;
-
-            Status GetVisibleClipBounds(OUT RectF *rect) const;
-
-            Status GetVisibleClipBounds(OUT Rect *rect) const;
-
-            BOOL IsVisibleClipEmpty() const;
-
-            BOOL IsVisible(IN INT x,
-                           IN INT y) const;
-            BOOL IsVisible(IN const Point& point) const;
-
-            BOOL IsVisible(IN INT x,
-                           IN INT y,
-                           IN INT width,
-                           IN INT height) const;
-            BOOL IsVisible(IN const Rect& rect) const;
-
-            BOOL IsVisible(IN REAL x,
-                           IN REAL y) const;
-            BOOL IsVisible(IN const PointF& point) const;
-            BOOL IsVisible(IN REAL x,
-                           IN REAL y,
-                           IN REAL width,
-                           IN REAL height) const;
-
-            BOOL IsVisible(IN const RectF& rect) const;
-            GraphicsState Save() const;
-
-            Status Restore(IN GraphicsState gstate);
-            GraphicsContainer BeginContainer(IN const RectF &dstrect,
-                                             IN const RectF &srcrect,
-                                             IN Unit         unit);
-            GraphicsContainer BeginContainer(IN const Rect    &dstrect,
-                                             IN const Rect    &srcrect,
-                                             IN Unit           unit);
-            GraphicsContainer BeginContainer();
-            Status EndContainer(IN GraphicsContainer state);
-            // Only valid when recording metafiles.
-            Status AddMetafileComment(IN const BYTE * data,
-                                      IN UINT sizeData);
-            static HPALETTE GetHalftonePalette();
-            Status GetLastStatus() const;
-        private:
-            Graphics(const Graphics &);
-            Graphics& operator=(const Graphics &);
-
-        protected:
-            Graphics(GpGraphics* graphics);
-
-            VOID SetNativeGraphics(GpGraphics *graphics);
-            Status SetStatus(Status status) const;
-            GpGraphics* GetNativeGraphics() const;
-
-            GpPen* GetNativePen(const Pen* pen);
-
-            \**** NOT SUPPORTED YET***/
-    };
+	public:
+		static Graphics* FromHDC(HDC hdc)
+		{
+			return new Graphics(hdc);
+		}
+		static Graphics* FromHDC(HDC hdc, HANDLE hdevice)
+		{
+			return new Graphics(hdc, hdevice);
+		}
+		static Graphics* FromHWND(HWND hwnd, BOOL icm = FALSE)
+		{
+			return new Graphics(hwnd, icm);
+		}
+		static Graphics* FromImage(Image* image)
+		{
+			return new Graphics(image);
+		}
+		static HPALETTE GetHalftonePalette()
+		{
+			return DLLExports::GdipCreateHalftonePalette();
+		}
+
+		Graphics(Image* image) : nativeGraphics(NULL), lastStatus(Ok)
+		{
+			bIsCtxInternal = false;
+			lastStatus = DLLExports::GdipGetImageGraphicsContext(
+				image ? image->nativeImage : NULL,
+				&nativeGraphics);
+		}
+		Graphics(HDC hdc) : nativeGraphics(NULL), lastStatus(Ok)
+		{
+			bIsCtxInternal = false;
+			lastStatus = DLLExports::GdipCreateFromHDC(
+				hdc, &nativeGraphics);
+		}
+		Graphics(HDC hdc, HANDLE hdevice) : nativeGraphics(NULL), lastStatus(Ok)
+		{
+			bIsCtxInternal = false;
+			lastStatus = DLLExports::GdipCreateFromHDC2(
+				hdc, hdevice, &nativeGraphics);
+		}
+		Graphics(HWND hwnd, BOOL icm = FALSE) :
+			nativeGraphics(NULL), lastStatus(Ok)
+		{
+			bIsCtxInternal = false;
+			if (icm) {
+				lastStatus = DLLExports::GdipCreateFromHWNDICM(
+					hwnd, &nativeGraphics);
+			}
+			else {
+				lastStatus = DLLExports::GdipCreateFromHWND(
+					hwnd, &nativeGraphics);
+			}
+		}
+		~Graphics()
+		{
+			if (nativeGraphics) {
+				DLLExports::GdipDeleteGraphics(nativeGraphics);
+			}
+			if (bIsCtxInternal) {
+				nvgDeleteInternal(ctx);
+			}
+		}
+
+		Status AddMetafileComment(const BYTE* data, UINT sizeData)
+		{
+			return GpStatus::Ok;
+			/*WASM: NOT SUPPORTED
+			return updateStatus(DLLExports::GdipComment(
+				nativeGraphics, sizeData, data));*/
+		}
+		GraphicsContainer BeginContainer()
+		{
+			GraphicsContainer result = 0;
+			updateStatus(DLLExports::GdipBeginContainer2(
+				nativeGraphics, &result));
+			return result;
+		}
+		GraphicsContainer BeginContainer(const RectF& dstrect,
+			const RectF& srcrect, Unit unit)
+		{
+			GraphicsContainer result = 0;
+			updateStatus(DLLExports::GdipBeginContainer(
+				nativeGraphics, &dstrect, &srcrect, unit,
+				&result));
+			return result;
+		}
+		GraphicsContainer BeginContainer(const Rect& dstrect,
+			const Rect& srcrect, Unit unit)
+		{
+			GraphicsContainer result = 0;
+			updateStatus(DLLExports::GdipBeginContainerI(
+				nativeGraphics, &dstrect, &srcrect, unit,
+				&result));
+			return result;
+		}
+		Status Clear(const Color& color)
+		{
+			return updateStatus(DLLExports::GdipGraphicsClear(
+				nativeGraphics, color.GetValue()));
+		}
+		Status DrawArc(const Pen* pen, REAL x, REAL y, REAL width, REAL height,
+			REAL startAngle, REAL sweepAngle)
+		{
+			return updateStatus(DLLExports::GdipDrawArc(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				x, y, width, height, startAngle, sweepAngle));
+		}
+		Status DrawArc(const Pen* pen, INT x, INT y, INT width, INT height,
+			REAL startAngle, REAL sweepAngle)
+		{
+			return updateStatus(DLLExports::GdipDrawArcI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				x, y, width, height, startAngle, sweepAngle));
+		}
+		Status DrawArc(const Pen* pen, const RectF& rect,
+			REAL startAngle, REAL sweepAngle)
+		{
+			return updateStatus(DLLExports::GdipDrawArc(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height,
+				startAngle, sweepAngle));
+		}
+		Status DrawArc(const Pen* pen, const Rect& rect,
+			REAL startAngle, REAL sweepAngle)
+		{
+			return updateStatus(DLLExports::GdipDrawArcI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height,
+				startAngle, sweepAngle));
+		}
+		Status DrawBezier(const Pen* pen,
+			REAL x1, REAL y1, REAL x2, REAL y2,
+			REAL x3, REAL y3, REAL x4, REAL y4)
+		{
+			return updateStatus(DLLExports::GdipDrawBezier(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				x1, y1, x2, y2, x3, y3, x4, y4));
+		}
+		Status DrawBezier(const Pen* pen,
+			INT x1, INT y1, INT x2, INT y2,
+			INT x3, INT y3, INT x4, INT y4)
+		{
+			return updateStatus(DLLExports::GdipDrawBezierI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				x1, y1, x2, y2, x3, y3, x4, y4));
+		}
+		Status DrawBezier(const Pen* pen,
+			const PointF& pt1, const PointF& pt2,
+			const PointF& pt3, const PointF& pt4)
+		{
+			return updateStatus(DLLExports::GdipDrawBezier(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				pt1.X, pt1.Y, pt2.X, pt2.Y,
+				pt3.X, pt3.Y, pt4.X, pt4.Y));
+		}
+		Status DrawBezier(const Pen* pen,
+			const Point& pt1, const Point& pt2,
+			const Point& pt3, const Point& pt4)
+		{
+			return updateStatus(DLLExports::GdipDrawBezierI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				pt1.X, pt1.Y, pt2.X, pt2.Y,
+				pt3.X, pt3.Y, pt4.X, pt4.Y));
+		}
+		Status DrawBeziers(const Pen* pen, const PointF* points, INT count)
+		{
+			return updateStatus(DLLExports::GdipDrawBeziers(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count));
+		}
+		Status DrawBeziers(const Pen* pen, const Point* points, INT count)
+		{
+			return updateStatus(DLLExports::GdipDrawBeziersI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count));
+		}
+		Status DrawCachedBitmap(CachedBitmap* cb, INT x, INT y)
+		{
+			return GpStatus::Ok;
+			/*WASM: NOT SUPPORTED
+			return updateStatus(DLLExports::GdipDrawCachedBitmap(
+				nativeGraphics,
+				cb ? cb->nativeCachedBitmap : NULL,
+				x, y));*/
+		}
+		Status DrawClosedCurve(const Pen* pen, const PointF* points, INT count)
+		{
+			return updateStatus(DLLExports::GdipDrawClosedCurve(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count));
+		}
+		Status DrawClosedCurve(const Pen* pen, const Point* points, INT count)
+		{
+			return updateStatus(DLLExports::GdipDrawClosedCurveI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count));
+		}
+		Status DrawClosedCurve(const Pen* pen, const PointF* points, INT count,
+			REAL tension)
+		{
+			return updateStatus(DLLExports::GdipDrawClosedCurve2(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count, tension));
+		}
+		Status DrawClosedCurve(const Pen* pen, const Point* points, INT count,
+			REAL tension)
+		{
+			return updateStatus(DLLExports::GdipDrawClosedCurve2I(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count, tension));
+		}
+		Status DrawCurve(const Pen* pen, const PointF* points, INT count)
+		{
+			return updateStatus(DLLExports::GdipDrawCurve(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count));
+		}
+		Status DrawCurve(const Pen* pen, const Point* points, INT count)
+		{
+			return updateStatus(DLLExports::GdipDrawCurveI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count));
+		}
+		Status DrawCurve(const Pen* pen, const PointF* points, INT count,
+			REAL tension)
+		{
+			return updateStatus(DLLExports::GdipDrawCurve2(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count, tension));
+		}
+		Status DrawCurve(const Pen* pen, const Point* points, INT count,
+			REAL tension)
+		{
+			return updateStatus(DLLExports::GdipDrawCurve2I(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count, tension));
+		}
+		Status DrawCurve(const Pen* pen, const PointF* points, INT count,
+			INT offset, INT numberOfSegments, REAL tension)
+		{
+			return updateStatus(DLLExports::GdipDrawCurve3(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count, offset,
+				numberOfSegments, tension));
+		}
+		Status DrawCurve(const Pen* pen, const Point* points, INT count,
+			INT offset, INT numberOfSegments, REAL tension)
+		{
+			return updateStatus(DLLExports::GdipDrawCurve3I(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count, offset,
+				numberOfSegments, tension));
+		}
+		Status DrawDriverString(const UINT16* text, INT length,
+			const Font* font, const Brush* brush,
+			const PointF* positions, INT flags,
+			const Matrix* matrix)
+		{
+			return updateStatus(DLLExports::GdipDrawDriverString(
+				nativeGraphics, text, length,
+				font ? font->nativeFont : NULL,
+				brush ? brush->nativeBrush : NULL,
+				positions, flags,
+				matrix ? matrix->nativeMatrix : NULL));
+		}
+		Status DrawEllipse(const Pen* pen,
+			REAL x, REAL y, REAL width, REAL height)
+		{
+			return updateStatus(DLLExports::GdipDrawEllipse(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				x, y, width, height));
+		}
+		Status DrawEllipse(const Pen* pen, INT x, INT y, INT width, INT height)
+		{
+			return updateStatus(DLLExports::GdipDrawEllipseI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				x, y, width, height));
+		}
+		Status DrawEllipse(const Pen* pen, const RectF& rect)
+		{
+			return updateStatus(DLLExports::GdipDrawEllipse(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height));
+		}
+		Status DrawEllipse(const Pen* pen, const Rect& rect)
+		{
+			return updateStatus(DLLExports::GdipDrawEllipseI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height));
+		}
+		Status DrawImage(Image* image, REAL x, REAL y)
+		{
+			return updateStatus(DLLExports::GdipDrawImage(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				x, y));
+		}
+		Status DrawImage(Image* image, INT x, INT y)
+		{
+			return updateStatus(DLLExports::GdipDrawImageI(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				x, y));
+		}
+		Status DrawImage(Image* image, const PointF& point)
+		{
+			return updateStatus(DLLExports::GdipDrawImage(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				point.X, point.Y));
+		}
+		Status DrawImage(Image* image, const Point& point)
+		{
+			return updateStatus(DLLExports::GdipDrawImageI(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				point.X, point.Y));
+		}
+		Status DrawImage(Image* image, REAL x, REAL y, REAL width, REAL height)
+		{
+			return updateStatus(DLLExports::GdipDrawImageRect(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				x, y, width, height));
+		}
+		Status DrawImage(Image* image, INT x, INT y, INT width, INT height)
+		{
+			return updateStatus(DLLExports::GdipDrawImageRectI(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				x, y, width, height));
+		}
+		Status DrawImage(Image* image, const RectF& rect)
+		{
+			return updateStatus(DLLExports::GdipDrawImageRect(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height));
+		}
+		Status DrawImage(Image* image, const Rect& rect)
+		{
+			return updateStatus(DLLExports::GdipDrawImageRectI(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height));
+		}
+		Status DrawImage(Image* image, const PointF* destPoints, INT count)
+		{
+			return updateStatus(DLLExports::GdipDrawImagePoints(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				destPoints, count));
+		}
+		Status DrawImage(Image* image, const Point* destPoints, INT count)
+		{
+			return updateStatus(DLLExports::GdipDrawImagePointsI(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				destPoints, count));
+		}
+		Status DrawImage(Image* image, REAL x, REAL y, REAL srcx, REAL srcy,
+			REAL srcwidth, REAL srcheight, Unit srcUnit)
+		{
+			return updateStatus(DLLExports::GdipDrawImagePointRect(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				x, y, srcx, srcy, srcwidth, srcheight,
+				srcUnit));
+		}
+		Status DrawImage(Image* image, INT x, INT y, INT srcx, INT srcy,
+			INT srcwidth, INT srcheight, Unit srcUnit)
+		{
+			return updateStatus(DLLExports::GdipDrawImagePointRectI(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				x, y, srcx, srcy, srcwidth, srcheight,
+				srcUnit));
+		}
+		Status DrawImage(Image* image, const RectF& destRect,
+			REAL srcx, REAL srcy, REAL srcwidth, REAL srcheight,
+			Unit srcUnit,
+			const ImageAttributes* imageAttributes = NULL,
+			DrawImageAbort callback = NULL,
+			VOID* callbackData = NULL)
+		{
+			return updateStatus(DLLExports::GdipDrawImageRectRect(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				destRect.X, destRect.Y,
+				destRect.Width, destRect.Height,
+				srcx, srcy, srcwidth, srcheight, srcUnit,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL,
+				callback, callbackData));
+		}
+		Status DrawImage(Image* image, const Rect& destRect,
+			INT srcx, INT srcy, INT srcwidth, INT srcheight,
+			Unit srcUnit,
+			const ImageAttributes* imageAttributes = NULL,
+			DrawImageAbort callback = NULL,
+			VOID* callbackData = NULL)
+		{
+			return updateStatus(DLLExports::GdipDrawImageRectRectI(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				destRect.X, destRect.Y,
+				destRect.Width, destRect.Height,
+				srcx, srcy, srcwidth, srcheight, srcUnit,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL,
+				callback, callbackData));
+		}
+		Status DrawImage(Image* image, const RectF& destRect,
+			const RectF& sourceRect, Unit srcUnit,
+			const ImageAttributes* imageAttributes = NULL)
+		{
+			return updateStatus(DLLExports::GdipDrawImageRectRectI(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				destRect.X, destRect.Y,
+				destRect.Width, destRect.Height,
+				sourceRect.X, sourceRect.Y,
+				sourceRect.Width, sourceRect.Height, srcUnit,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL,
+				NULL, NULL));
+		}
+		Status DrawImage(Image* image, const PointF* destPoints, INT count,
+			REAL srcx, REAL srcy, REAL srcwidth, REAL srcheight,
+			Unit srcUnit,
+			const ImageAttributes* imageAttributes = NULL,
+			DrawImageAbort callback = NULL,
+			VOID* callbackData = NULL)
+		{
+			return updateStatus(DLLExports::GdipDrawImagePointsRect(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				destPoints, count,
+				srcx, srcy, srcwidth, srcheight, srcUnit,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL,
+				callback, callbackData));
+		}
+		Status DrawImage(Image* image, const Point* destPoints, INT count,
+			INT srcx, INT srcy, INT srcwidth, INT srcheight,
+			Unit srcUnit,
+			const ImageAttributes* imageAttributes = NULL,
+			DrawImageAbort callback = NULL,
+			VOID* callbackData = NULL)
+		{
+			return updateStatus(DLLExports::GdipDrawImagePointsRectI(
+				nativeGraphics,
+				image ? image->nativeImage : NULL,
+				destPoints, count,
+				srcx, srcy, srcwidth, srcheight, srcUnit,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL,
+				callback, callbackData));
+		}
+		// TODO: [GDI+ 1.1] Graphics::DrawImage(..Effect..)
+		//Status DrawImage(Image *image, RectF *sourceRect, Matrix *matrix,
+		//		Effect *effect, ImageAttributes *imageAttributes,
+		//		Unit srcUnit)
+		//{
+		//	return updateStatus(DLLExports::GdipDrawImageFX(
+		//			nativeGraphics,
+		//			image ? image->nativeImage : NULL,
+		//			sourceRect,
+		//			matrix ? matrix->nativeMatrix : NULL,
+		//			effect ? effect->nativeEffect : NULL,
+		//			imageAttributes ? imageAttributes->nativeImageAttributes : NULL,
+		//			srcUnit));
+		//}
+		Status DrawLine(const Pen* pen, REAL x1, REAL y1, REAL x2, REAL y2)
+		{
+			return updateStatus(DLLExports::GdipDrawLine(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				x1, y1, x2, y2));
+		}
+		Status DrawLine(const Pen* pen, INT x1, INT y1, INT x2, INT y2)
+		{
+			return updateStatus(DLLExports::GdipDrawLineI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				x1, y1, x2, y2));
+		}
+		Status DrawLine(const Pen* pen, const PointF& pt1, const PointF& pt2)
+		{
+			return updateStatus(DLLExports::GdipDrawLine(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				pt1.X, pt1.Y, pt2.X, pt2.Y));
+		}
+		Status DrawLine(const Pen* pen, const Point& pt1, const Point& pt2)
+		{
+			return updateStatus(DLLExports::GdipDrawLineI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				pt1.X, pt1.Y, pt2.X, pt2.Y));
+		}
+		Status DrawLines(const Pen* pen, const PointF* points, INT count)
+		{
+			return updateStatus(DLLExports::GdipDrawLines(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count));
+		}
+		Status DrawLines(const Pen* pen, const Point* points, INT count)
+		{
+			return updateStatus(DLLExports::GdipDrawLinesI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count));
+		}
+		Status DrawPath(const Pen* pen, const GraphicsPath* path)
+		{
+			return updateStatus(DLLExports::GdipDrawPath(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				path ? path->nativePath : NULL));
+		}
+		Status DrawPie(const Pen* pen, REAL x, REAL y, REAL width, REAL height,
+			REAL startAngle, REAL sweepAngle)
+		{
+			return updateStatus(DLLExports::GdipDrawPie(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				x, y, width, height, startAngle, sweepAngle));
+		}
+		Status DrawPie(const Pen* pen, INT x, INT y, INT width, INT height,
+			REAL startAngle, REAL sweepAngle)
+		{
+			return updateStatus(DLLExports::GdipDrawPieI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				x, y, width, height, startAngle, sweepAngle));
+		}
+		Status DrawPie(const Pen* pen, const RectF& rect,
+			REAL startAngle, REAL sweepAngle)
+		{
+			return updateStatus(DLLExports::GdipDrawPie(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height,
+				startAngle, sweepAngle));
+		}
+		Status DrawPie(const Pen* pen, const Rect& rect,
+			REAL startAngle, REAL sweepAngle)
+		{
+			return updateStatus(DLLExports::GdipDrawPieI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height,
+				startAngle, sweepAngle));
+		}
+		Status DrawPolygon(const Pen* pen, const PointF* points, INT count)
+		{
+			return updateStatus(DLLExports::GdipDrawPolygon(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count));
+		}
+		Status DrawPolygon(const Pen* pen, const Point* points, INT count)
+		{
+			return updateStatus(DLLExports::GdipDrawPolygonI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				points, count));
+		}
+		Status DrawRectangle(const Pen* pen,
+			REAL x, REAL y, REAL width, REAL height)
+		{
+			return updateStatus(DLLExports::GdipDrawRectangle(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				x, y, width, height));
+		}
+		Status DrawRectangle(const Pen* pen,
+			INT x, INT y, INT width, INT height)
+		{
+			return updateStatus(DLLExports::GdipDrawRectangleI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				x, y, width, height));
+		}
+		Status DrawRectangle(const Pen* pen, const RectF& rect)
+		{
+			return updateStatus(DLLExports::GdipDrawRectangle(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height));
+		}
+		Status DrawRectangle(const Pen* pen, const Rect& rect)
+		{
+			return updateStatus(DLLExports::GdipDrawRectangleI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height));
+		}
+		Status DrawRectangles(const Pen* pen, const RectF* rects, INT count)
+		{
+			return updateStatus(DLLExports::GdipDrawRectangles(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				rects, count));
+		}
+		Status DrawRectangles(const Pen* pen, const Rect* rects, INT count)
+		{
+			return updateStatus(DLLExports::GdipDrawRectanglesI(
+				nativeGraphics, pen ? pen->nativePen : NULL,
+				rects, count));
+		}
+		Status DrawString(const WCHAR* string, INT length, const Font* font,
+			const PointF& origin, const Brush* brush)
+		{
+			RectF layoutRect(origin.X, origin.Y, 0.0f, 0.0f);
+			return updateStatus(DLLExports::GdipDrawString(
+				nativeGraphics, string, length,
+				font ? font->nativeFont : NULL,
+				&layoutRect, NULL,
+				brush ? brush->nativeBrush : NULL));
+		}
+		Status DrawString(const WCHAR* string, INT length,
+			const Font* font, const PointF& origin,
+			const StringFormat* stringFormat, const Brush* brush)
+		{
+			RectF layoutRect(origin.X, origin.Y, 0.0f, 0.0f);
+			return updateStatus(DLLExports::GdipDrawString(
+				nativeGraphics, string, length,
+				font ? font->nativeFont : NULL,
+				&layoutRect,
+				stringFormat ? stringFormat->nativeStringFormat : NULL,
+				brush ? brush->nativeBrush : NULL));
+		}
+		Status DrawString(const WCHAR* string, INT length,
+			const Font* font, const RectF& layoutRect,
+			const StringFormat* stringFormat, const Brush* brush)
+		{
+			return updateStatus(DLLExports::GdipDrawString(
+				nativeGraphics, string, length,
+				font ? font->nativeFont : NULL,
+				&layoutRect,
+				stringFormat ? stringFormat->nativeStringFormat : NULL,
+				brush ? brush->nativeBrush : NULL));
+		}
+		Status EndContainer(GraphicsContainer state)
+		{
+			return updateStatus(DLLExports::GdipEndContainer(
+				nativeGraphics, state));
+		}
+		Status EnumerateMetafile(const Metafile* metafile,
+			const PointF& destPoint,
+			EnumerateMetafileProc callback,
+			VOID* callbackData = NULL,
+			ImageAttributes* imageAttributes = NULL)
+		{
+			return updateStatus(DLLExports::GdipEnumerateMetafileDestPoint(
+				nativeGraphics,
+				metafile ? ((GpMetafile*)metafile->nativeImage) : NULL,
+				&destPoint, callback, callbackData,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL));
+		}
+		Status EnumerateMetafile(const Metafile* metafile,
+			const Point& destPoint,
+			EnumerateMetafileProc callback,
+			VOID* callbackData = NULL,
+			ImageAttributes* imageAttributes = NULL)
+		{
+			return updateStatus(DLLExports::GdipEnumerateMetafileDestPointI(
+				nativeGraphics,
+				metafile ? ((GpMetafile*)metafile->nativeImage) : NULL,
+				&destPoint, callback, callbackData,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL));
+		}
+		Status EnumerateMetafile(const Metafile* metafile,
+			const RectF& destRect,
+			EnumerateMetafileProc callback,
+			VOID* callbackData = NULL,
+			ImageAttributes* imageAttributes = NULL)
+		{
+			return updateStatus(DLLExports::GdipEnumerateMetafileDestRect(
+				nativeGraphics,
+				metafile ? ((GpMetafile*)metafile->nativeImage) : NULL,
+				&destRect, callback, callbackData,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL));
+		}
+		Status EnumerateMetafile(const Metafile* metafile,
+			const Rect& destRect,
+			EnumerateMetafileProc callback,
+			VOID* callbackData = NULL,
+			ImageAttributes* imageAttributes = NULL)
+		{
+			return updateStatus(DLLExports::GdipEnumerateMetafileDestRectI(
+				nativeGraphics,
+				metafile ? ((GpMetafile*)metafile->nativeImage) : NULL,
+				&destRect, callback, callbackData,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL));
+		}
+		Status EnumerateMetafile(const Metafile* metafile,
+			const PointF* destPoints, INT count,
+			EnumerateMetafileProc callback,
+			VOID* callbackData = NULL,
+			ImageAttributes* imageAttributes = NULL)
+		{
+			return updateStatus(DLLExports::GdipEnumerateMetafileDestPoints(
+				nativeGraphics,
+				metafile ? ((GpMetafile*)metafile->nativeImage) : NULL,
+				destPoints, count, callback, callbackData,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL));
+		}
+		Status EnumerateMetafile(const Metafile* metafile,
+			const Point* destPoints, INT count,
+			EnumerateMetafileProc callback,
+			VOID* callbackData = NULL,
+			ImageAttributes* imageAttributes = NULL)
+		{
+			return updateStatus(DLLExports::GdipEnumerateMetafileDestPointsI(
+				nativeGraphics,
+				metafile ? ((GpMetafile*)metafile->nativeImage) : NULL,
+				destPoints, count, callback, callbackData,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL));
+		}
+		Status EnumerateMetafile(const Metafile* metafile,
+			const PointF& destPoint,
+			const RectF& srcRect, Unit srcUnit,
+			EnumerateMetafileProc callback,
+			VOID* callbackData = NULL,
+			ImageAttributes* imageAttributes = NULL)
+		{
+			return updateStatus(DLLExports::GdipEnumerateMetafileSrcRectDestPoint(
+				nativeGraphics,
+				metafile ? ((GpMetafile*)metafile->nativeImage) : NULL,
+				&destPoint, &srcRect, srcUnit,
+				callback, callbackData,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL));
+		}
+		Status EnumerateMetafile(const Metafile* metafile,
+			const Point& destPoint,
+			const Rect& srcRect, Unit srcUnit,
+			EnumerateMetafileProc callback,
+			VOID* callbackData = NULL,
+			ImageAttributes* imageAttributes = NULL)
+		{
+			return updateStatus(DLLExports::GdipEnumerateMetafileSrcRectDestPointI(
+				nativeGraphics,
+				metafile ? ((GpMetafile*)metafile->nativeImage) : NULL,
+				&destPoint, &srcRect, srcUnit,
+				callback, callbackData,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL));
+		}
+		Status EnumerateMetafile(const Metafile* metafile,
+			const RectF& destRect,
+			const RectF& srcRect, Unit srcUnit,
+			EnumerateMetafileProc callback,
+			VOID* callbackData = NULL,
+			ImageAttributes* imageAttributes = NULL)
+		{
+			return updateStatus(DLLExports::GdipEnumerateMetafileSrcRectDestRect(
+				nativeGraphics,
+				metafile ? ((GpMetafile*)metafile->nativeImage) : NULL,
+				&destRect, &srcRect, srcUnit,
+				callback, callbackData,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL));
+		}
+		Status EnumerateMetafile(const Metafile* metafile,
+			const Rect& destRect,
+			const Rect& srcRect, Unit srcUnit,
+			EnumerateMetafileProc callback,
+			VOID* callbackData = NULL,
+			ImageAttributes* imageAttributes = NULL)
+		{
+			return updateStatus(DLLExports::GdipEnumerateMetafileSrcRectDestRectI(
+				nativeGraphics,
+				metafile ? ((GpMetafile*)metafile->nativeImage) : NULL,
+				&destRect, &srcRect, srcUnit,
+				callback, callbackData,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL));
+		}
+		Status EnumerateMetafile(const Metafile* metafile,
+			const PointF* destPoints, INT count,
+			const RectF& srcRect, Unit srcUnit,
+			EnumerateMetafileProc callback,
+			VOID* callbackData = NULL,
+			ImageAttributes* imageAttributes = NULL)
+		{
+			return updateStatus(DLLExports::GdipEnumerateMetafileSrcRectDestPoints(
+				nativeGraphics,
+				metafile ? ((GpMetafile*)metafile->nativeImage) : NULL,
+				destPoints, count, &srcRect, srcUnit,
+				callback, callbackData,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL));
+		}
+		Status EnumerateMetafile(const Metafile* metafile,
+			const Point* destPoints, INT count,
+			const Rect& srcRect, Unit srcUnit,
+			EnumerateMetafileProc callback,
+			VOID* callbackData = NULL,
+			ImageAttributes* imageAttributes = NULL)
+		{
+			return updateStatus(DLLExports::GdipEnumerateMetafileSrcRectDestPointsI(
+				nativeGraphics,
+				metafile ? ((GpMetafile*)metafile->nativeImage) : NULL,
+				destPoints, count, &srcRect, srcUnit,
+				callback, callbackData,
+				imageAttributes ? imageAttributes->nativeImageAttributes : NULL));
+		}
+		Status ExcludeClip(const RectF& rect)
+		{
+			return updateStatus(DLLExports::GdipSetClipRect(
+				nativeGraphics,
+				rect.X, rect.Y, rect.Width, rect.Height,
+				CombineModeExclude));
+		}
+		Status ExcludeClip(const Rect& rect)
+		{
+			return updateStatus(DLLExports::GdipSetClipRectI(
+				nativeGraphics,
+				rect.X, rect.Y, rect.Width, rect.Height,
+				CombineModeExclude));
+		}
+		Status ExcludeClip(const Region* region)
+		{
+			return updateStatus(DLLExports::GdipSetClipRegion(
+				nativeGraphics,
+				region ? region->nativeRegion : NULL,
+				CombineModeExclude));
+		}
+		Status FillClosedCurve(const Brush* brush,
+			const PointF* points, INT count)
+		{
+			return updateStatus(DLLExports::GdipFillClosedCurve(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				points, count));
+		}
+		Status FillClosedCurve(const Brush* brush,
+			const Point* points, INT count)
+		{
+			return updateStatus(DLLExports::GdipFillClosedCurveI(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				points, count));
+		}
+		Status FillClosedCurve(const Brush* brush,
+			const PointF* points, INT count,
+			FillMode fillMode, REAL tension = 0.5f)
+		{
+			return updateStatus(DLLExports::GdipFillClosedCurve2(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				points, count, tension, fillMode));
+		}
+		Status FillClosedCurve(const Brush* brush,
+			const Point* points, INT count,
+			FillMode fillMode, REAL tension = 0.5f)
+		{
+			return updateStatus(DLLExports::GdipFillClosedCurve2I(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				points, count, tension, fillMode));
+		}
+		Status FillEllipse(const Brush* brush,
+			REAL x, REAL y, REAL width, REAL height)
+		{
+			return updateStatus(DLLExports::GdipFillEllipse(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				x, y, width, height));
+		}
+		Status FillEllipse(const Brush* brush,
+			INT x, INT y, INT width, INT height)
+		{
+			return updateStatus(DLLExports::GdipFillEllipseI(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				x, y, width, height));
+		}
+		Status FillEllipse(const Brush* brush, const RectF& rect)
+		{
+			return updateStatus(DLLExports::GdipFillEllipse(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height));
+		}
+		Status FillEllipse(const Brush* brush, const Rect& rect)
+		{
+			return updateStatus(DLLExports::GdipFillEllipseI(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height));
+		}
+		Status FillPath(const Brush* brush, const GraphicsPath* path)
+		{
+			return updateStatus(DLLExports::GdipFillPath(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				path ? path->nativePath : NULL));
+		}
+		Status FillPie(const Brush* brush,
+			REAL x, REAL y, REAL width, REAL height,
+			REAL startAngle, REAL sweepAngle)
+		{
+			return updateStatus(DLLExports::GdipFillPie(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				x, y, width, height, startAngle, sweepAngle));
+		}
+		Status FillPie(const Brush* brush, INT x, INT y, INT width, INT height,
+			REAL startAngle, REAL sweepAngle)
+		{
+			return updateStatus(DLLExports::GdipFillPieI(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				x, y, width, height, startAngle, sweepAngle));
+		}
+		Status FillPie(const Brush* brush, const RectF& rect,
+			REAL startAngle, REAL sweepAngle)
+		{
+			return updateStatus(DLLExports::GdipFillPie(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height,
+				startAngle, sweepAngle));
+		}
+		Status FillPie(const Brush* brush, const Rect& rect,
+			REAL startAngle, REAL sweepAngle)
+		{
+			return updateStatus(DLLExports::GdipFillPieI(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height,
+				startAngle, sweepAngle));
+		}
+		Status FillPolygon(const Brush* brush, const PointF* points, INT count)
+		{
+			return updateStatus(DLLExports::GdipFillPolygon(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				points, count, FillModeAlternate));
+		}
+		Status FillPolygon(const Brush* brush, const Point* points, INT count)
+		{
+			return updateStatus(DLLExports::GdipFillPolygonI(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				points, count, FillModeAlternate));
+		}
+		Status FillPolygon(const Brush* brush, const PointF* points, INT count,
+			FillMode fillMode)
+		{
+			return updateStatus(DLLExports::GdipFillPolygon(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				points, count, fillMode));
+		}
+		Status FillPolygon(const Brush* brush, const Point* points, INT count,
+			FillMode fillMode)
+		{
+			return updateStatus(DLLExports::GdipFillPolygonI(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				points, count, fillMode));
+		}
+		Status FillRectangle(const Brush* brush,
+			REAL x, REAL y, REAL width, REAL height)
+		{
+			return updateStatus(DLLExports::GdipFillRectangle(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				x, y, width, height));
+		}
+		Status FillRectangle(const Brush* brush,
+			INT x, INT y, INT width, INT height)
+		{
+			return updateStatus(DLLExports::GdipFillRectangleI(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				x, y, width, height));
+		}
+		Status FillRectangle(const Brush* brush, const RectF& rect)
+		{
+			return updateStatus(DLLExports::GdipFillRectangle(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height));
+		}
+		Status FillRectangle(const Brush* brush, const Rect& rect)
+		{
+			return updateStatus(DLLExports::GdipFillRectangleI(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				rect.X, rect.Y, rect.Width, rect.Height));
+		}
+		Status FillRectangles(const Brush* brush, const RectF* rects, INT count)
+		{
+			return updateStatus(DLLExports::GdipFillRectangles(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				rects, count));
+		}
+		Status FillRectangles(const Brush* brush, const Rect* rects, INT count)
+		{
+			return updateStatus(DLLExports::GdipFillRectanglesI(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				rects, count));
+		}
+		Status FillRegion(const Brush* brush, const Region* region)
+		{
+			return updateStatus(DLLExports::GdipFillRegion(
+				nativeGraphics,
+				brush ? brush->nativeBrush : NULL,
+				region ? region->nativeRegion : NULL));
+		}
+		VOID StartFrame(REAL width, REAL height, REAL pixelRatio)
+		{
+			updateStatus(DLLExports::GdipStartFrame(nativeGraphics, width, height, pixelRatio));
+		}
+		VOID CancelFrame()
+		{
+			updateStatus(DLLExports::GdipCancelFrame(nativeGraphics));
+		}
+		VOID Flush(FlushIntention intention = FlushIntentionFlush)
+		{
+			updateStatus(DLLExports::GdipFlush(nativeGraphics, intention));
+		}
+		Status GetClip(Region* region) const
+		{
+			return updateStatus(DLLExports::GdipGetClip(
+				nativeGraphics,
+				region ? region->nativeRegion : NULL));
+		}
+		Status GetClipBounds(RectF* rect) const
+		{
+			return updateStatus(DLLExports::GdipGetClipBounds(
+				nativeGraphics, rect));
+		}
+		Status GetClipBounds(Rect* rect) const
+		{
+			return updateStatus(DLLExports::GdipGetClipBoundsI(
+				nativeGraphics, rect));
+		}
+		CompositingMode GetCompositingMode() const
+		{
+			CompositingMode result = CompositingModeSourceOver;
+			updateStatus(DLLExports::GdipGetCompositingMode(
+				nativeGraphics, &result));
+			return result;
+		}
+		CompositingQuality GetCompositingQuality() const
+		{
+			CompositingQuality result = CompositingQualityDefault;
+			updateStatus(DLLExports::GdipGetCompositingQuality(
+				nativeGraphics, &result));
+			return result;
+		}
+		REAL GetDpiX() const
+		{
+			REAL result = 0.0f;
+			updateStatus(DLLExports::GdipGetDpiX(nativeGraphics, &result));
+			return result;
+		}
+		REAL GetDpiY() const
+		{
+			REAL result = 0.0f;
+			updateStatus(DLLExports::GdipGetDpiY(nativeGraphics, &result));
+			return result;
+		}
+		HDC GetHDC()
+		{
+			HDC result = NULL;
+			updateStatus(DLLExports::GdipGetDC(nativeGraphics, &result));
+			return result;
+		}
+		InterpolationMode GetInterpolationMode() const
+		{
+			InterpolationMode result = InterpolationModeDefault;
+			updateStatus(DLLExports::GdipGetInterpolationMode(
+				nativeGraphics, &result));
+			return result;
+		}
+		Status GetLastStatus() const
+		{
+			Status result = lastStatus;
+			lastStatus = Ok;
+			return result;
+		}
+		Status GetNearestColor(Color* color) const
+		{
+			return updateStatus(DLLExports::GdipGetNearestColor(
+				nativeGraphics, color ? &color->Value : NULL));
+		}
+		REAL GetPageScale() const
+		{
+			REAL result = 0.0f;
+			updateStatus(DLLExports::GdipGetPageScale(
+				nativeGraphics, &result));
+			return result;
+		}
+		Unit GetPageUnit() const
+		{
+			Unit result = UnitWorld;
+			updateStatus(DLLExports::GdipGetPageUnit(
+				nativeGraphics, &result));
+			return result;
+		}
+		PixelOffsetMode GetPixelOffsetMode() const
+		{
+			PixelOffsetMode result = PixelOffsetModeDefault;
+			updateStatus(DLLExports::GdipGetPixelOffsetMode(
+				nativeGraphics, &result));
+			return result;
+		}
+		Status GetRenderingOrigin(INT* x, INT* y) const
+		{
+			return updateStatus(DLLExports::GdipGetRenderingOrigin(
+				nativeGraphics, x, y));
+		}
+		SmoothingMode GetSmoothingMode() const
+		{
+			SmoothingMode result = SmoothingModeDefault;
+			updateStatus(DLLExports::GdipGetSmoothingMode(
+				nativeGraphics, &result));
+			return result;
+		}
+		UINT GetTextContrast() const
+		{
+			UINT result = 0;
+			updateStatus(DLLExports::GdipGetTextContrast(
+				nativeGraphics, &result));
+			return result;
+		}
+		TextRenderingHint GetTextRenderingHint() const
+		{
+			TextRenderingHint result = TextRenderingHintSystemDefault;
+			updateStatus(DLLExports::GdipGetTextRenderingHint(
+				nativeGraphics, &result));
+			return result;
+		}
+		Status GetTransform(Matrix* matrix) const
+		{
+			return updateStatus(DLLExports::GdipGetWorldTransform(
+				nativeGraphics,
+				matrix ? matrix->nativeMatrix : NULL));
+		}
+		Status GetVisibleClipBounds(RectF* rect) const
+		{
+			return updateStatus(DLLExports::GdipGetVisibleClipBounds(
+				nativeGraphics, rect));
+		}
+		Status GetVisibleClipBounds(Rect* rect) const
+		{
+			return updateStatus(DLLExports::GdipGetVisibleClipBoundsI(
+				nativeGraphics, rect));
+		}
+		Status IntersectClip(const RectF& rect)
+		{
+			return updateStatus(DLLExports::GdipSetClipRect(
+				nativeGraphics,
+				rect.X, rect.Y, rect.Width, rect.Height,
+				CombineModeIntersect));
+		}
+		Status IntersectClip(const Rect& rect)
+		{
+			return updateStatus(DLLExports::GdipSetClipRectI(
+				nativeGraphics,
+				rect.X, rect.Y, rect.Width, rect.Height,
+				CombineModeIntersect));
+		}
+		Status IntersectClip(const Region* region)
+		{
+			return updateStatus(DLLExports::GdipSetClipRegion(
+				nativeGraphics,
+				region ? region->nativeRegion : NULL,
+				CombineModeIntersect));
+		}
+		BOOL IsClipEmpty() const
+		{
+			BOOL result = FALSE;
+			updateStatus(DLLExports::GdipIsClipEmpty(
+				nativeGraphics, &result));
+			return result;
+		}
+		BOOL IsVisible(REAL x, REAL y) const
+		{
+			BOOL result = FALSE;
+			updateStatus(DLLExports::GdipIsVisiblePoint(
+				nativeGraphics, x, y, &result));
+			return result;
+		}
+		BOOL IsVisible(INT x, INT y) const
+		{
+			BOOL result = FALSE;
+			updateStatus(DLLExports::GdipIsVisiblePointI(
+				nativeGraphics, x, y, &result));
+			return result;
+		}
+		BOOL IsVisible(const PointF& point) const
+		{
+			BOOL result = FALSE;
+			updateStatus(DLLExports::GdipIsVisiblePoint(
+				nativeGraphics, point.X, point.Y, &result));
+			return result;
+		}
+		BOOL IsVisible(const Point& point) const
+		{
+			BOOL result = FALSE;
+			updateStatus(DLLExports::GdipIsVisiblePointI(
+				nativeGraphics, point.X, point.Y, &result));
+			return result;
+		}
+		BOOL IsVisible(REAL x, REAL y, REAL width, REAL height) const
+		{
+			BOOL result = FALSE;
+			updateStatus(DLLExports::GdipIsVisibleRect(
+				nativeGraphics, x, y, width, height, &result));
+			return result;
+		}
+		BOOL IsVisible(INT x, INT y, INT width, INT height) const
+		{
+			BOOL result = FALSE;
+			updateStatus(DLLExports::GdipIsVisibleRectI(
+				nativeGraphics, x, y, width, height, &result));
+			return result;
+		}
+		BOOL IsVisible(const RectF& rect) const
+		{
+			BOOL result = FALSE;
+			updateStatus(DLLExports::GdipIsVisibleRect(
+				nativeGraphics, rect.X, rect.Y,
+				rect.Width, rect.Height, &result));
+			return result;
+		}
+		BOOL IsVisible(const Rect& rect) const
+		{
+			BOOL result = FALSE;
+			updateStatus(DLLExports::GdipIsVisibleRectI(
+				nativeGraphics, rect.X, rect.Y,
+				rect.Width, rect.Height, &result));
+			return result;
+		}
+		BOOL IsVisibleClipEmpty() const
+		{
+			BOOL result = FALSE;
+			updateStatus(DLLExports::GdipIsVisibleClipEmpty(
+				nativeGraphics, &result));
+			return result;
+		}
+		Status MeasureCharacterRanges(const WCHAR* string, INT length,
+			const Font* font, const RectF& layoutRect,
+			const StringFormat* stringFormat,
+			INT regionCount, Region* regions) const
+		{
+			if (regionCount <= 0 || !regions)
+				return lastStatus = GpStatus::InvalidParameter;
+
+			GpRegion** nativeRegionArray = new GpRegion*[regionCount];
+			if (!nativeRegionArray)
+				return lastStatus = OutOfMemory;
+			for (int i = 0; i < regionCount; ++i) {
+				nativeRegionArray[i] = regions[i].nativeRegion;
+			}
+			Status status = updateStatus(DLLExports::GdipMeasureCharacterRanges(
+				nativeGraphics, string, length,
+				font ? font->nativeFont : NULL,
+				&layoutRect,
+				stringFormat ? stringFormat->nativeStringFormat : NULL,
+				regionCount, nativeRegionArray));
+			delete[](nativeRegionArray);
+			return status;
+		}
+		Status MeasureDriverString(const UINT16* text, INT length,
+			const Font* font, const PointF* positions, INT flags,
+			const Matrix* matrix, RectF* boundingBox) const
+		{
+			return updateStatus(DLLExports::GdipMeasureDriverString(
+				nativeGraphics, text, length,
+				font ? font->nativeFont : NULL,
+				positions, flags,
+				matrix ? matrix->nativeMatrix : NULL,
+				boundingBox));
+		}
+		Status MeasureString(const WCHAR* string, INT length,
+			const Font* font, const RectF& layoutRect,
+			RectF* boundingBox) const
+		{
+			return updateStatus(DLLExports::GdipMeasureString(
+				nativeGraphics, string, length,
+				font ? font->nativeFont : NULL,
+				&layoutRect, NULL, boundingBox, NULL, NULL));
+		}
+		Status MeasureString(const WCHAR* string, INT length,
+			const Font* font, const RectF& layoutRect,
+			const StringFormat* stringFormat, RectF* boundingBox,
+			INT* codepointsFitted = NULL,
+			INT* linesFitted = NULL) const
+		{
+			return updateStatus(DLLExports::GdipMeasureString(
+				nativeGraphics, string, length,
+				font ? font->nativeFont : NULL,
+				&layoutRect,
+				stringFormat ? stringFormat->nativeStringFormat : NULL,
+				boundingBox, codepointsFitted, linesFitted));
+		}
+		Status MeasureString(const WCHAR* string, INT length,
+			const Font* font, const SizeF& layoutRectSize,
+			const StringFormat* stringFormat, SizeF* size,
+			INT* codepointsFitted = NULL,
+			INT* linesFitted = NULL) const
+		{
+			if (!size) return lastStatus = GpStatus::InvalidParameter;
+			RectF layoutRect(PointF(0.0f, 0.0f), layoutRectSize);
+			RectF boundingBox;
+			Status status = updateStatus(DLLExports::GdipMeasureString(
+				nativeGraphics, string, length,
+				font ? font->nativeFont : NULL,
+				&layoutRect,
+				stringFormat ? stringFormat->nativeStringFormat : NULL,
+				&boundingBox, codepointsFitted, linesFitted));
+			boundingBox.GetSize(size);
+			return status;
+		}
+		Status MeasureString(const WCHAR* string, INT length,
+			const Font* font, const PointF& origin,
+			RectF* boundingBox) const
+		{
+			RectF layoutRect(origin, SizeF(0.0f, 0.0f));
+			return updateStatus(DLLExports::GdipMeasureString(
+				nativeGraphics, string, length,
+				font ? font->nativeFont : NULL,
+				&layoutRect, NULL, boundingBox, NULL, NULL));
+		}
+		Status MeasureString(const WCHAR* string, INT length,
+			const Font* font, const PointF& origin,
+			const StringFormat* stringFormat,
+			RectF* boundingBox) const
+		{
+			RectF layoutRect(origin, SizeF(0.0f, 0.0f));
+			return updateStatus(DLLExports::GdipMeasureString(
+				nativeGraphics, string, length,
+				font ? font->nativeFont : NULL,
+				&layoutRect,
+				stringFormat ? stringFormat->nativeStringFormat : NULL,
+				boundingBox, NULL, NULL));
+		}
+		Status MultiplyTransform(const Matrix* matrix,
+			MatrixOrder order = MatrixOrderPrepend)
+		{
+			return updateStatus(DLLExports::GdipMultiplyWorldTransform(
+				nativeGraphics,
+				matrix ? matrix->nativeMatrix : NULL, order));
+		}
+		VOID ReleaseHDC(HDC hdc)
+		{
+			updateStatus(DLLExports::GdipReleaseDC(nativeGraphics, hdc));
+		}
+		Status ResetClip()
+		{
+			return updateStatus(DLLExports::GdipResetClip(nativeGraphics));
+		}
+		Status ResetTransform()
+		{
+			return updateStatus(DLLExports::GdipResetWorldTransform(
+				nativeGraphics));
+		}
+		Status Restore(GraphicsState state)
+		{
+			return updateStatus(DLLExports::GdipRestoreGraphics(
+				nativeGraphics, state));
+		}
+		Status RotateTransform(REAL angle,
+			MatrixOrder order = MatrixOrderPrepend)
+		{
+			return updateStatus(DLLExports::GdipRotateWorldTransform(
+				nativeGraphics, angle, order));
+		}
+		GraphicsState Save() const
+		{
+			GraphicsState result = 0;
+			updateStatus(DLLExports::GdipSaveGraphics(
+				nativeGraphics, &result));
+			return result;
+		}
+		Status ScaleTransform(REAL sx, REAL sy,
+			MatrixOrder order = MatrixOrderPrepend)
+		{
+			return updateStatus(DLLExports::GdipScaleWorldTransform(
+				nativeGraphics, sx, sy, order));
+		}
+		VOID SetAbort()
+		{
+			updateStatus(NotImplemented);
+		}
+		Status SetClip(const Graphics* g,
+			CombineMode combineMode = CombineModeReplace)
+		{
+			return updateStatus(DLLExports::GdipSetClipGraphics(
+				nativeGraphics, g ? g->nativeGraphics : NULL,
+				combineMode));
+		}
+		Status SetClip(const RectF& rect,
+			CombineMode combineMode = CombineModeReplace)
+		{
+			return updateStatus(DLLExports::GdipSetClipRect(
+				nativeGraphics,
+				rect.X, rect.Y, rect.Width, rect.Height,
+				combineMode));
+		}
+		Status SetClip(const Rect& rect,
+			CombineMode combineMode = CombineModeReplace)
+		{
+			return updateStatus(DLLExports::GdipSetClipRectI(
+				nativeGraphics,
+				rect.X, rect.Y, rect.Width, rect.Height,
+				combineMode));
+		}
+		Status SetClip(const GraphicsPath* path,
+			CombineMode combineMode = CombineModeReplace)
+		{
+			return updateStatus(DLLExports::GdipSetClipPath(
+				nativeGraphics,
+				path ? path->nativePath : NULL,
+				combineMode));
+		}
+		Status SetClip(const Region* region,
+			CombineMode combineMode = CombineModeReplace)
+		{
+			return updateStatus(DLLExports::GdipSetClipRegion(
+				nativeGraphics,
+				region ? region->nativeRegion : NULL,
+				combineMode));
+		}
+		Status SetClip(HRGN hRgn, CombineMode combineMode = CombineModeReplace)
+		{
+			return updateStatus(DLLExports::GdipSetClipHrgn(
+				nativeGraphics, hRgn, combineMode));
+		}
+		Status SetCompositingMode(CompositingMode compositingMode)
+		{
+			return updateStatus(DLLExports::GdipSetCompositingMode(
+				nativeGraphics, compositingMode));
+		}
+		Status SetCompositingQuality(CompositingQuality compositingQuality)
+		{
+			return updateStatus(DLLExports::GdipSetCompositingQuality(
+				nativeGraphics, compositingQuality));
+		}
+		Status SetInterpolationMode(InterpolationMode interpolationMode)
+		{
+			return updateStatus(DLLExports::GdipSetInterpolationMode(
+				nativeGraphics, interpolationMode));
+		}
+		Status SetPageScale(REAL scale)
+		{
+			return updateStatus(DLLExports::GdipSetPageScale(
+				nativeGraphics, scale));
+		}
+		Status SetPageUnit(Unit unit)
+		{
+			return updateStatus(DLLExports::GdipSetPageUnit(
+				nativeGraphics, unit));
+		}
+		Status SetPixelOffsetMode(PixelOffsetMode pixelOffsetMode)
+		{
+			return updateStatus(DLLExports::GdipSetPixelOffsetMode(
+				nativeGraphics, pixelOffsetMode));
+		}
+		Status SetRenderingOrigin(INT x, INT y)
+		{
+			return updateStatus(DLLExports::GdipSetRenderingOrigin(
+				nativeGraphics, x, y));
+		}
+		Status SetSmoothingMode(SmoothingMode smoothingMode)
+		{
+			return updateStatus(DLLExports::GdipSetSmoothingMode(
+				nativeGraphics, smoothingMode));
+		}
+		Status SetTextContrast(UINT contrast)
+		{
+			return updateStatus(DLLExports::GdipSetTextContrast(
+				nativeGraphics, contrast));
+		}
+		Status SetTextRenderingHint(TextRenderingHint textRenderingHint)
+		{
+			return updateStatus(DLLExports::GdipSetTextRenderingHint(
+				nativeGraphics, textRenderingHint));
+		}
+		Status SetTransform(const Matrix* matrix)
+		{
+			return updateStatus(DLLExports::GdipSetWorldTransform(
+				nativeGraphics,
+				matrix ? matrix->nativeMatrix : NULL));
+		}
+		Status TransformPoints(CoordinateSpace destSpace,
+			CoordinateSpace srcSpace,
+			PointF* pts, INT count) const
+		{
+			return updateStatus(DLLExports::GdipTransformPoints(
+				nativeGraphics, destSpace, srcSpace,
+				pts, count));
+		}
+		Status TransformPoints(CoordinateSpace destSpace,
+			CoordinateSpace srcSpace,
+			Point* pts, INT count) const
+		{
+			return updateStatus(DLLExports::GdipTransformPointsI(
+				nativeGraphics, destSpace, srcSpace,
+				pts, count));
+		}
+		Status TranslateClip(REAL dx, REAL dy)
+		{
+			return updateStatus(DLLExports::GdipTranslateClip(
+				nativeGraphics, dx, dy));
+		}
+		Status TranslateClip(INT dx, INT dy)
+		{
+			return updateStatus(DLLExports::GdipTranslateClipI(
+				nativeGraphics, dx, dy));
+		}
+		Status TranslateTransform(REAL dx, REAL dy,
+			MatrixOrder order = MatrixOrderPrepend)
+		{
+			return updateStatus(DLLExports::GdipTranslateWorldTransform(
+				nativeGraphics, dx, dy, order));
+		}
+
+	private:
+		Graphics(const Graphics&);
+		Graphics& operator=(const Graphics&);
+
+		Status updateStatus(Status newStatus) const
+		{
+			if (newStatus != GpStatus::Ok) lastStatus = newStatus;
+			return newStatus;
+		}
+
+		GpGraphics* nativeGraphics;
+		mutable Status lastStatus;
+	};
 }
-
 #endif /* __GDIPLUS_GRAPHICS_H */

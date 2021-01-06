@@ -1,49 +1,44 @@
 // Copyright (C) Asobo Studio. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
+// based on the w32api implementation of the GDI+ wrappers: 
+//
+//   Created by Markus Koenig <markus@stber-koenig.de>
 
 
-#ifndef __GDIPLUS_H
-#define __GDIPLUS_H
+#pragma once
 
-#include <MSFS\MSFS_WindowsTypes.h>
-#include <string.h>
-#include <MSFS\Render\nanovg.h>
-
-#ifndef _COM_interface
-#define _COM_interface struct
+#ifndef _MSFS_WASM_PROXY_GDIPLUS
+#define _MSFS_WASM_PROXY_GDIPLUS
 #endif
 
-typedef _COM_interface IStream IStream;
-typedef _COM_interface IDirectDrawSurface7 IDirectDrawSurface7;
+#include <MSFS\Render\nanovg.h>
 
-typedef float REAL;
-typedef SHORT INT16;
-typedef WORD UINT16;
+#include "gdiplusflat.h"
+#include <math.h>
 
-#include "gdiplusenums.h"
-#include "gdiplustypes.h"
-#include "gdiplusgpstubs.h"
-#include "gdiplusimaging.h"
-#include "gdiplusmem.h"
-#include "gdipluspixelformats.h"
-#include "gdipluscolor.h"
-#include "gdipluscolormatrix.h"
+#include "GdiPlusEnums.h"
+#include "GdiPlusTypes.h"
+#include "GdiPlusImaging.h"
+#include "gdiplusinit.h"
+#include "gdiplusmetaheader.h"
+#include "GdiPlusPixelFormats.h"
+#include "GdiPlusColor.h"
 #include "gdipluseffects.h"
-
+#include "gdiplusimagecodec.h"
 
 #ifdef __cplusplus
 #include "gdiplusbase.h"
 #include "gdiplusheaders.h"
-#include "gdiplusmatrix.h"
-#include "gdiplusbrush.h"
-#include "gdipluspen.h"
-#include "gdiplusstringformat.h"
-#include "gdipluspath.h"
-#include "gdiplusgraphics.h"
-#include "gdipluslinecaps.h"
-
+#include "gdiplusimageattributes.h"
+#include "GdiPlusMatrix.h"
+#include "GdiPlusBrush.h"
+#include "gdiplusmetafile.h"
+#include "GdiPlusPen.h"
+#include "GdiPlusStringFormat.h"
+#include "GdiPlusPath.h"
+#include "GdiPlusGraphics.h"
+#include "GdiPlusLineCaps.h"
+#include "gdiplusimpl.h"
 
 #endif /* __cplusplus */
 
-
-#endif /* __GDIPLUS_H */

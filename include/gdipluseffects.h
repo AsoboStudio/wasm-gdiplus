@@ -1,15 +1,15 @@
 // Copyright (C) Asobo Studio. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
+// based on the w32api implementation of the GDI+ wrappers: 
+//
+//   Created by Markus Koenig <markus@stber-koenig.de>
+
 
 #ifndef __GDIPLUS_EFFECTS_H
 #define __GDIPLUS_EFFECTS_H
 
-#include <MSFS\MSFS_WindowsTypes.h>
-#include "gdiplustypes.h"
-#include "gdiplusheaders.h"
-
-namespace Gdiplus {
-
+namespace Gdiplus
+{
 	typedef enum CurveAdjustments {
 		AdjustExposure = 0,
 		AdjustDensity = 1,
@@ -30,7 +30,7 @@ namespace Gdiplus {
 
 	typedef struct BlurParams {
 		REAL radius;
-		::BOOL expandEdge;
+		BOOL expandEdge;
 	} BlurParams;
 
 	typedef struct BrightnessContrastParams {
@@ -70,7 +70,7 @@ namespace Gdiplus {
 	} LevelsParams;
 
 	typedef struct RedEyeCorrectionParams {
-		::UINT numberOfAreas;
+		UINT numberOfAreas;
 		RECT* areas;
 	} RedEyeCorrectionParams;
 
@@ -97,5 +97,4 @@ namespace Gdiplus {
 	extern const GUID TintEffectGuid;                    /* ? */
 
 }
-
 #endif /* __GDIPLUS_EFFECTS_H */
