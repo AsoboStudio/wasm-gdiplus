@@ -1,4 +1,4 @@
-# GDI+ for Microsoft Flight Simulator 2020
+# WebAssembly GDI+ for Microsoft Flight Simulator 2020
 
 Implementation of the GDI+ API as a wrapper of NanoVG, targeting WebAssembly for *Microsoft Flight Simulator 2020*.
 The version of NanoVG in term uses the Low Level Vector Graphics API (**LLVG**) provided by *Microsoft Flight Simulator 2020*.
